@@ -21,6 +21,21 @@ locales_container = Template(
 
 locales_assignment = Template("{key} \"{value}\";")
 
+headers_container = Template(
+"""#ifndef _Oatom_H_
+#define _Oatom_H_
+
+enum
+{{
+    {value}
+}};
+
+#endif
+"""
+)
+
+headers_assignment = Template("{key} = {id},")
+
 class Description(object):
 
     def __init__(self, config):
@@ -65,6 +80,17 @@ class Description(object):
 
         return locales
 
+    def RenderHeaders(self):
+        try:
+            data = {
+                "key": self.id,
+                "id": self.GetId()
+            }
+
+            return headers_assignment.Render(data)
+        except AttributeError:
+            return ""
+
 class Container(Description):
 
     def PrepareResourceData(self):
@@ -92,6 +118,16 @@ class Container(Description):
                         locales[key] = value     
 
         return locales
+
+    def RenderHeaders(self):
+        headers = super(Container, self).RenderHeaders()
+
+        if isinstance(self.value, list):
+            child_headers = "\n".join(filter(None, [x.RenderHeaders() for x in self.value]))
+
+            headers = "\n".join(filter(None, [headers, child_headers]))
+
+        return headers
 
 class Assignment(Description):
 
@@ -124,6 +160,15 @@ class Root(Container):
             locales[key] = locales_container.Render(data)
 
         return locales
+
+    def RenderHeaders(self):
+        headers = super(Root, self).RenderHeaders() 
+
+        data = {
+            "value": headers
+        }
+
+        return headers_container.Render(data)
 
 strength = Container({
     "id": "STRENGTH",
@@ -236,3 +281,4 @@ root = Root({
 
 print(root.RenderResource())
 print(root.RenderLocales()["strings_us"])
+print(root.RenderHeaders())
