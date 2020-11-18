@@ -100,16 +100,16 @@ class Layout(object):
         self.flags = flags
         self.group = group
 
-    def Build(self, path):
+    def Build(self, path, destinationDirectoryPath):
         dirname, filename = os.path.split(path)
         filenameRoot, filenameExtension = os.path.splitext(filename)
 
-        descriptionPath = os.path.join(dirname, "res/description")
+        descriptionPath = os.path.join(destinationDirectoryPath, "res/description")
 
         # generate resource
         resourcePath = os.path.join(descriptionPath, "{}.res".format(self.name.lower()))
 
-        assert_directories(resourcePath)
+        assert_directories(resourcePath, True)
 
         with open(resourcePath, "w") as f:
             f.write(self.GenerateResource())
@@ -119,7 +119,7 @@ class Layout(object):
         # generate header
         headerPath = os.path.join(descriptionPath, "{}.h".format(self.name.lower()))
 
-        assert_directories(headerPath)
+        assert_directories(headerPath, True)
 
         with open(headerPath, "w") as f:
             f.write(self.GenerateHeader())
@@ -130,9 +130,9 @@ class Layout(object):
         strings = self.GenerateStrings()
 
         for locale, value in strings.items():
-            stringsPath = os.path.join(dirname, "res", locale, "description", "{}.str".format(self.name.lower()))
+            stringsPath = os.path.join(destinationDirectoryPath, "res", locale, "description", "{}.str".format(self.name.lower()))
             
-            assert_directories(stringsPath)
+            assert_directories(stringsPath, True)
 
             with open(stringsPath, "w") as f:
                 f.write(value)
@@ -191,7 +191,9 @@ class Layout(object):
                 if not ignoreLines:
                     computedLines.append(line)  
 
-            pluginPath = os.path.join(dirname, "{}.pyp".format(filenameRoot))
+            pluginPath = os.path.join(destinationDirectoryPath, "{}.pyp".format(filenameRoot))
+
+            assert_directories(pluginPath, True)
 
             with open(pluginPath, "w") as outputFile:
                 outputFile.write("\n".join(computedLines))
