@@ -31,3 +31,11 @@ This will be where you define your plugin IDs, the static IDs will be injected a
 #----end_id_section----
 ```
 
+Executing the `build.py` file with c4dpy will generate the following files:
+
+```python
+tmyawesomeplugin.pyp # the actual plugin file
+res/description/tmyawesomeplugin.h # the header file with the IDs
+res/description/tmyawesomeplugin.res # the layout
+res/strings_us/description/tmyawesomeplugin.str # the localized strings
+```
