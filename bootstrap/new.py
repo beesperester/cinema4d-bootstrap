@@ -52,7 +52,18 @@ class Description(object):
         pass
 
     def RenderLocales(self):
-        pass
+        locales = {}
+
+        if isinstance(self.locales, dict):
+            for key, value in self.locales.items():
+                data = {
+                    "key": self.id,
+                    "value": value
+                }
+
+                locales[key] = locales_assignment.Render(data)
+
+        return locales
 
 class Container(Description):
 
@@ -68,31 +79,17 @@ class Container(Description):
         return resource_container.Render(self.PrepareResourceData())
 
     def RenderLocales(self):
-        if not isinstance(self.locales, dict):
-            raise AttributeError("no locales have been assigned")
+        locales = super(Container, self).RenderLocales()        
 
-        print(self.locales)
+        if isinstance(self.value, list):
+            for description in self.value:
+                child_locales = description.RenderLocales()
 
-        locales = {}
-
-        for key, value in self.locales.items():
-            data = {
-                "key": self.id,
-                "value": value
-            }
-
-            lines = [locales_assignment.Render(data)]
-
-            if isinstance(self.value, list):
-                for description in self.value:
-                    try:
-                        child_locales = description.RenderLocales()
-
-                        lines.append(child_locales[key])
-                    except AttributeError:
-                        pass
-
-            locales[key] = "\n".join(lines)
+                for key, value in child_locales.items():
+                    if key in locales.keys():
+                        locales[key] = "\n".join([locales[key], value])
+                    else:
+                        locales[key] = value     
 
         return locales
 
@@ -106,22 +103,6 @@ class Assignment(Description):
 
         return resource_assignment.Render(self.PrepareResourceData())
 
-    def RenderLocales(self):
-        if not self.locales or not isinstance(self.locales, dict):
-            raise AttributeError("no locales have been assigned")
-
-        locales = {}
-
-        for key, value in self.locales.items():
-            data = {
-                "key": self.id,
-                "value": value
-            }
-
-            locales[key] = locales_assignment.Render(data)
-
-        return locales
-
 class Root(Container):
 
     def PrepareResourceData(self):
@@ -132,31 +113,17 @@ class Root(Container):
         return data
 
     def RenderLocales(self):
-        if not self.locales or not isinstance(self.locales, dict):
-            raise AttributeError("no locales have been assigned")
-
-        locales = {}
+        locales = super(Root, self).RenderLocales()
 
         for key, value in self.locales.items():
-            children = []
-
-            for description in self.value:
-                try:
-                    child_locales = description.RenderLocales()[key]
-
-                    children.append(child_locales)
-                except AttributeError:
-                    pass
-
             data = {
                 "id": self.id,
-                "value": "\n".join(children)
+                "value": locales[key] if key in locales.keys() else ""
             }
 
             locales[key] = locales_container.Render(data)
 
         return locales
-
 
 strength = Container({
     "id": "STRENGTH",
