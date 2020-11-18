@@ -28,7 +28,7 @@ class Template(object):
 
             # remove format groups
             for group in groups:
-                if not group in data.keys() or not data[group]:
+                if not group in data.keys() or data[group] is None:
                     line = line.replace("{{{}}}".format(group), "")
 
             if line:
