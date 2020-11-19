@@ -1,12 +1,32 @@
+"""Test io module."""
+
+import unittest
 import os
+import sys
+
+project_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+examples_path = os.path.join(project_path, "examples")
+
+sys.path.append(examples_path)
+
+try:
+    import c4d
+except ImportError:
+    pass
 
 from bootstrap.io import build
+from tmyplugin import root
 
-from ttest import root
 
-root_path = os.path.dirname(os.path.realpath(__file__))
+class TestIoMethods(unittest.TestCase):
 
-plugin_file = os.path.join(root_path, "ttest.py")
-destination_directory = os.path.join(root_path, "dist")
+    def test_build(self):
+        if "c4d" in sys.modules:
+            plugin_file = os.path.join(examples_path, "tmyplugin.py")
+            destination_directory = os.path.join(project_path, "tests", "dist")
 
-build(root, plugin_file, destination_directory, "ttest")
+            result = build(root, plugin_file, destination_directory, "tmyplugin")
+
+            self.assertTrue(result)
+        else:
+            self.skipTest()

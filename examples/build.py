@@ -1,11 +1,11 @@
 import os
-from tmyawesomeplugin import layout
-from bootstrap.utilities.path import assert_directories
 
-rootDirectoryPath = os.path.dirname(os.path.realpath(__file__))
-srcFilePath = os.path.join(rootDirectoryPath, "tmyawesomeplugin.py")
-destDirectoryPath = os.path.join(rootDirectoryPath, "dist")
+from bootstrap.io import build
+from tmyplugin import root
 
-assert_directories(destDirectoryPath)
+root_path = os.path.dirname(os.path.realpath(__file__))
 
-layout.Build(srcFilePath, destDirectoryPath)
+plugin_file = os.path.join(root_path, "tmyplugin.py")
+destination_directory = os.path.join(root_path, "dist")
+
+result = build(root, plugin_file, destination_directory, "tmyplugin")

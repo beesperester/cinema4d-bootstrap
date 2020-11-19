@@ -144,3 +144,5 @@ def build(description, plugin_file, destination_directory, filename_root):
     write_strings(description, destination_directory, filename_root)
 
     compile_plugin(plugin_file, destination_directory, filename_root)
+
+    return True

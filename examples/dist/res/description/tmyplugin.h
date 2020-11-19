@@ -4,7 +4,7 @@
 
 enum
 {
-    Tmyawesomeplugin = 52314798,
+    Tmyplugin = 72636982,
     GROUP_BASE_SETTINGS = 59543963,
     STRENGTH = 34087515,
     UP_VECTOR = 82448016,

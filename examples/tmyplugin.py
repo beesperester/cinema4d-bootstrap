@@ -2,7 +2,7 @@ import c4d
 import os
 
 #----begin_resource_section----
-from bootstrap import Description
+from bootstrap import Description, Assignment, Container, Group
 
 strength = Description({
     "id": "STRENGTH",
@@ -79,9 +79,7 @@ up_vector = Description({
     }
 })
 
-base_settings = Description({
-    "id": "GROUP_BASE_SETTINGS",
-    "key": "GROUP",
+base_settings = Group("GROUP_BASE_SETTINGS", {
     "value": [
         Description({
             "key": "DEFAULT",
@@ -95,22 +93,11 @@ base_settings = Description({
     }
 })
 
-root = Description({
-    "id": "Tmyawesomeplugin",
-    "key": "CONTAINER",
+root = Container("Tmyplugin", {
     "value": [
-        Description({
-            "key": "NAME",
-            "value": "Tmyawesomeplugin"
-        }),
-        Description({
-            "key": "INCLUDE",
-            "value": "Tbase"
-        }),
-        Description({
-            "key": "INCLUDE",
-            "value": "Texpression"
-        }),
+        Assignment("NAME", "Tmyplugin"),
+        Assignment("INCLUDE", "Tbase"),
+        Assignment("INCLUDE", "Texpression"),
         base_settings
     ],
     "locales": {
@@ -127,7 +114,7 @@ STRENGTH = strength.GetId()
 # Be sure to use a unique ID obtained from www.plugincafe.com
 PLUGIN_ID = 223456790
 
-class Test(c4d.plugins.TagData):
+class MyPlugin(c4d.plugins.TagData):
     """MyAwesomePlugin Class"""
 
     def Init(self, node):
@@ -169,7 +156,7 @@ class Test(c4d.plugins.TagData):
 if __name__ == "__main__":
     # Retrieves the icon path
     directory, _ = os.path.split(__file__)
-    fn = os.path.join(directory, "res", "ttest.png")
+    fn = os.path.join(directory, "res", "tmyplugin.png")
 
     # Creates a BaseBitmap
     bmp = c4d.bitmaps.BaseBitmap()
@@ -181,9 +168,9 @@ if __name__ == "__main__":
         raise MemoryError("Failed to initialize the BaseBitmap.")
 
     c4d.plugins.RegisterTagPlugin(id=PLUGIN_ID,
-        str="Test plugin",
+        str="My Plugin",
         info=c4d.TAG_EXPRESSION | c4d.TAG_VISIBLE | c4d.TAG_IMPLEMENTS_DRAW_FUNCTION,
-        g=Test,
-        description="Ttest",
+        g=MyPlugin,
+        description="Tmyplugin",
         icon=bmp
     )
