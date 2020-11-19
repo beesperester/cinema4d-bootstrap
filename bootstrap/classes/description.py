@@ -26,3 +26,35 @@ class Description(object):
             raise IdError("No id has been assigned")
 
         return int(hashlib.sha1(self.id.encode('utf-8')).hexdigest(), 16) % (10 ** 8)
+
+class Assignment(Description):
+
+    def __init__(self, key, value):
+        config = {
+            "key": key,
+            "value": value
+        }
+
+        super(Assignment, self).__init__(config)
+
+class Group(Description):
+
+    def __init__(self, description_id, config):
+        default_config = {
+            **config,
+            "id": description_id,
+            "key": "GROUP"
+        }
+
+        super(Group, self).__init__(self, default_config)
+
+class Container(Description):
+    
+    def __init__(self, description_id, config):
+        default_config = {
+            **config,
+            "id": description_id,
+            "key": "CONTAINER"
+        }
+
+        super(Container, self).__init__(self, default_config)
