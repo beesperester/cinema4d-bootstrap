@@ -11,11 +11,11 @@ sys.path.append(examples_path)
 
 try:
     import c4d
+    from tmyplugin import root
 except ImportError:
     pass
 
 from bootstrap.io import build
-from tmyplugin import root
 
 
 class TestIoMethods(unittest.TestCase):
@@ -29,4 +29,4 @@ class TestIoMethods(unittest.TestCase):
 
             self.assertTrue(result)
         else:
-            self.skipTest()
+            self.skipTest("missing module c4d")
