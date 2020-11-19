@@ -1,4 +1,4 @@
-![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main)
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) ![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main)
 
 # cinema4d-bootstrap
 
