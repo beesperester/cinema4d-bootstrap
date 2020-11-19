@@ -7,6 +7,7 @@ Simplify your Cinema 4D plugin development process by generating all the necessa
 ## Table of contents
 1. [Description](#Description)
 1. [Examples](#Examples)
+1. [Plugins](#Plugins)
 
 ## Description
 
@@ -141,3 +142,9 @@ res/description/tmyplugin.h # the header file with the IDs
 res/description/tmyplugin.res # the layout
 res/strings_us/description/tmyplugin.str # the localized strings
 ```
+
+## Plugins
+
+Plugins that are using bootstrap:
+
+1. [cinema4d-jiggle](https://github.com/beesperester/cinema4d-jiggle)
