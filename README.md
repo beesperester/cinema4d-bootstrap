@@ -12,7 +12,7 @@ With **bootstrap** you can automate a lot of the back and force gerally associat
 
 ## Examples
 
-Check out `tmyawesomeplugin.py` for a simple working example.
+Check out `tmyplugin.py` for a simple working example.
 
 You will notice two types of comments which describe specific parts of your plugin setup.
 
@@ -34,8 +34,8 @@ This will be where you define your plugin IDs, the static IDs will be injected a
 Executing the `build.py` file with c4dpy will generate the following files:
 
 ```python
-tmyawesomeplugin.pyp # the actual plugin file
-res/description/tmyawesomeplugin.h # the header file with the IDs
-res/description/tmyawesomeplugin.res # the layout
-res/strings_us/description/tmyawesomeplugin.str # the localized strings
+tmyplugin.pyp # the actual plugin file
+res/description/tmyplugin.h # the header file with the IDs
+res/description/tmyplugin.res # the layout
+res/strings_us/description/tmyplugin.str # the localized strings
 ```
