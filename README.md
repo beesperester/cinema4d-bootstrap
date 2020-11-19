@@ -1,3 +1,5 @@
+![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main)
+
 # cinema4d-bootstrap
 
 Simplify your Cinema 4D plugin development process by generating all the necessary c-headers, strings and resources automatically.
