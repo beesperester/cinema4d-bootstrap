@@ -42,51 +42,13 @@ strength = Description({
     }
 })
 
-up_vector_xplus = Description({
-    "id": "UP_VECTOR_XPLUS",
-    "key": "UP_VECTOR_XPLUS",
-    "locales": {
-        "strings_us": "X+"
-    }
-})
-
-up_vector_xminus = Description({
-    "id": "UP_VECTOR_XMINUS",
-    "key": "UP_VECTOR_XMINUS",
-    "locales": {
-        "strings_us": "X-"
-    }
-})
-
-up_vector = Description({
-    "id": "UP_VECTOR",
-    "key": "LONG",
-    "value": [
-        Description({
-            "key": "ANIM",
-            "value": "OFF"
-        }),
-        Description({
-            "key": "CYCLE",
-            "value": [
-                up_vector_xplus,
-                up_vector_xminus
-            ]
-        })
-    ],
-    "locales": {
-        "strings_us": "Up Vector"
-    }
-})
-
 base_settings = Group("GROUP_BASE_SETTINGS", {
     "value": [
         Description({
             "key": "DEFAULT",
             "value": 1
         }),
-        strength,
-        up_vector
+        strength
     ],
     "locales": {
         "strings_us": "Base Settings"
