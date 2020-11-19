@@ -31,6 +31,8 @@ class Template(object):
                 if not group in data.keys() or data[group] is None:
                     line = line.replace("{{{}}}".format(group), "")
 
+                    line = line.strip()
+
             if line:
                 # get indentation level
                 indentation = len(line) - len(line.lstrip())

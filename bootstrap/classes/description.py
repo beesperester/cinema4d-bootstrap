@@ -29,13 +29,17 @@ class Description(object):
 
 class Assignment(Description):
 
-    def __init__(self, key, value):
-        config = {
+    def __init__(self, key = None, value = None, config = None):
+        if config is None:
+            config = {}
+
+        default_config = {
+            **config,
             "key": key,
             "value": value
         }
 
-        super(Assignment, self).__init__(config)
+        super(Assignment, self).__init__(default_config)
 
 class Group(Description):
 
@@ -46,7 +50,7 @@ class Group(Description):
             "key": "GROUP"
         }
 
-        super(Group, self).__init__(self, default_config)
+        super(Group, self).__init__(default_config)
 
 class Container(Description):
     
@@ -57,4 +61,4 @@ class Container(Description):
             "key": "CONTAINER"
         }
 
-        super(Container, self).__init__(self, default_config)
+        super(Container, self).__init__(default_config)
