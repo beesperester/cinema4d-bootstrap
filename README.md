@@ -1,4 +1,4 @@
-![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main)
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) ![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main)
 
 # cinema4d-bootstrap
 
@@ -7,10 +7,13 @@ Simplify your Cinema 4D plugin development process by generating all the necessa
 ## Table of contents
 1. [Description](#Description)
 1. [Examples](#Examples)
+1. [Plugins](#Plugins)
 
 ## Description
 
 With **bootstrap** you can automate a lot of the back and force gerally associated with writing Cinema 4D plugins. No need to write all those pesky header, string and resource files by hand. Just define them in your plugin.py file and automagically build your plugin.h, plugin.res, plugin.str and plugin.pyp file.
+
+> You need to use **c4dpy** to build your plugin
 
 In the following excerpt you can see a very basic setup for a **REAL** value called **STRENGTH** which willbe displayed as **PERCENT**. This is wrappend in a **GROUP** with the name **SETTINGS** which is itself wrapped in a **CONTAINER** that represents the plugin. 
 
@@ -139,3 +142,9 @@ res/description/tmyplugin.h # the header file with the IDs
 res/description/tmyplugin.res # the layout
 res/strings_us/description/tmyplugin.str # the localized strings
 ```
+
+## Plugins
+
+Plugins that are using bootstrap:
+
+1. [cinema4d-jiggle](https://github.com/beesperester/cinema4d-jiggle)
