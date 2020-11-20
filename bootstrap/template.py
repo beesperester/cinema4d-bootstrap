@@ -1,7 +1,8 @@
 import re
 
+
 class Template(object):
-    
+
     def __init__(self, templateString):
         self.templateString = templateString
 
@@ -28,7 +29,7 @@ class Template(object):
 
             # remove format groups
             for group in groups:
-                if not group in data.keys() or data[group] is None:
+                if group not in data.keys() or data[group] is None:
                     line = line.replace("{{{}}}".format(group), "")
 
                     line = line.strip()
@@ -39,11 +40,13 @@ class Template(object):
 
                 # populate with data
                 dataPrepared = Template.PrepareData(data)
-                
+
                 lineFormatted = line.format(**dataPrepared)
 
                 # add indentation
-                line = lineFormatted.replace("\n", "\n{}".format(" " * indentation))
+                line = lineFormatted.replace(
+                    "\n", "\n{}".format(" " * indentation)
+                )
 
             lines.append(line)
 
