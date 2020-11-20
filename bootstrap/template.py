@@ -1,13 +1,34 @@
+"""Template module. This module provides the class "Template"
+which acts as a simple template engine."""
+
+__author__ = "Bernhard Esperester <bernhard@esperester.de>"
+
 import re
 
 
 class Template(object):
+    """Template class."""
 
     def __init__(self, templateString):
+        """Initialize instance of Template with a
+        python format string.
+
+        Args:
+            templateString: string
+        """
         self.templateString = templateString
 
     @classmethod
     def PrepareData(cls, data):
+        """Class method for preparing data
+        before it is inserted into the template.
+
+        Args:
+            data:   dict
+
+        Returns:
+            dict
+        """
         dataPrepared = data.copy()
 
         for key, value in data.items():
@@ -17,6 +38,14 @@ class Template(object):
         return dataPrepared
 
     def Render(self, data=None):
+        """Render the template with the provided data.
+
+        Args:
+            data:   dict
+
+        Returns:
+            string
+        """
         if data is None:
             data = {}
 
@@ -27,7 +56,7 @@ class Template(object):
         for line in self.templateString.split("\n"):
             groups = re.findall(formatPattern, line)
 
-            # remove format groups
+            # remove format groups where no data is provided
             for group in groups:
                 if group not in data.keys() or data[group] is None:
                     line = line.replace("{{{}}}".format(group), "")
