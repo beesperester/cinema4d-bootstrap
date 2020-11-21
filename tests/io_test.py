@@ -4,6 +4,8 @@ import unittest
 import os
 import sys
 
+from bootstrap.io import build
+
 project_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 examples_path = os.path.join(project_path, "examples")
 
@@ -15,8 +17,6 @@ try:
 except ImportError:
     pass
 
-from bootstrap.io import build
-
 
 class TestIoMethods(unittest.TestCase):
 
@@ -25,7 +25,12 @@ class TestIoMethods(unittest.TestCase):
             plugin_file = os.path.join(examples_path, "tmyplugin.py")
             destination_directory = os.path.join(project_path, "tests", "dist")
 
-            result = build(root, plugin_file, destination_directory, "tmyplugin")
+            result = build(
+                root,
+                plugin_file,
+                destination_directory,
+                "tmyplugin"
+            )
 
             self.assertTrue(result)
         else:

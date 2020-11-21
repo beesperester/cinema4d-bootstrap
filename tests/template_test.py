@@ -2,13 +2,14 @@
 
 import unittest
 
-from bootstrap.template import Template
+from bootstrap import Template
+
 
 class TestTemplateMethods(unittest.TestCase):
 
     def test_render(self):
         template = Template(
-"""{key} {id}
+            """{key} {id}
 {{
     {value}
 }}"""
