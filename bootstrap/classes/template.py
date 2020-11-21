@@ -12,20 +12,22 @@ class Template(object):
     This class models a generic Template
     """
 
-    def __init__(self, template_string: str):
+    def __init__(
+        self,
+        template_string: str
+    ) -> None:
         """
         This method initializes a new instance of the Template class.
-        :param template_string: string
-        :return:
         """
         self.template_string = template_string
 
     @classmethod
-    def PrepareData(cls, data: dict):
+    def PrepareData(
+        cls,
+        data: dict
+    ) -> None:
         """
-        This method implements.
-        :param name: string
-        :return: mixed
+        This method prepares data for rendering.
         """
         dataPrepared = data.copy()
 
@@ -35,10 +37,12 @@ class Template(object):
 
         return dataPrepared
 
-    def Render(self, data: dict):
-        """Render the template with the provided data.
-        :param data: dict
-        :return: string
+    def Render(
+        self,
+        data: dict
+    ) -> str:
+        """
+        Render the template with the provided data.
         """
         if data is None:
             data = {}

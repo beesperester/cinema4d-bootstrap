@@ -28,11 +28,9 @@ Template for rendering variable assignment
 """
 
 
-def render_header(header_reduced):
+def render_header(header_reduced: dict) -> str:
     """
     This method applies template rendering to the provided input.
-    :param header_reduced: dict
-    :return: string
     """
     data = {
         "value": [header_assignment.Render(x) for x in header_reduced]

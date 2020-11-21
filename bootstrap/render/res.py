@@ -22,11 +22,9 @@ Template for rendering variable assignment
 """
 
 
-def render_resource(resource_reduced):
+def render_resource(resource_reduced: dict) -> str:
     """
     This method applies template rendering to the provided input.
-    :param resource_reduced: dict
-    :return: string
     """
     data = {**resource_reduced}
 

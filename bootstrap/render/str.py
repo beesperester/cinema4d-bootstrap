@@ -23,7 +23,7 @@ Template for rendering variable assignment
 """
 
 
-def render_strings(strings_reduced):
+def render_strings(strings_reduced: dict) -> str:
     """
     This method applies template rendering to the provided input.
     :param strings_reduced: dict

@@ -38,13 +38,13 @@ Prefix to prepend to compiled files
 """
 
 
-def write_resource(description, destination_directory, filename):
+def write_resource(
+    description: bootstrap.Description,
+    destination_directory: str,
+    filename: str
+) -> None:
     """
     This method compiles the description to a resource file.
-    :param description: bootstrap.Description
-    :param destination_directory: string
-    :param filename: string
-    :return:
     """
     destination_file = os.path.join(
         destination_directory, "res/description",
@@ -63,13 +63,13 @@ def write_resource(description, destination_directory, filename):
     print("done writing {}".format(destination_file))
 
 
-def write_header(description, destination_directory, filename):
+def write_header(
+    description: bootstrap.Description,
+    destination_directory: str,
+    filename: str
+) -> None:
     """
     This method compiles the description to a header file.
-    :param description: bootstrap.Description
-    :param destination_directory: string
-    :param filename: string
-    :return:
     """
     destination_file = os.path.join(
         destination_directory, "res/description",
@@ -88,13 +88,13 @@ def write_header(description, destination_directory, filename):
     print("done writing {}".format(destination_file))
 
 
-def write_strings(description, destination_directory, filename):
+def write_strings(
+    description: bootstrap.Description,
+    destination_directory: str,
+    filename: str
+) -> None:
     """
     This method compiles the description to string files.
-    :param description: bootstrap.Description
-    :param destination_directory: string
-    :param filename: string
-    :return:
     """
     strings_rendered = render_strings(reduce_strings(description))
 
@@ -114,13 +114,13 @@ def write_strings(description, destination_directory, filename):
         print("done writing {}".format(destination_file))
 
 
-def compile_plugin(plugin_file, destination_directory, filename):
+def compile_plugin(
+    plugin_file: str,
+    destination_directory: str,
+    filename: str
+) -> None:
     """
     This method compiles the python plugin to a cinema 4d pyp file.
-    :param plugin_file: string
-    :param destination_directory: string
-    :param filename: string
-    :return:
     """
     plugin_filename, plugin_fileextension = os.path.splitext(
         os.path.basename(plugin_file)
@@ -197,14 +197,14 @@ def compile_plugin(plugin_file, destination_directory, filename):
         print("done writing {}".format(compiled_plugin_file))
 
 
-def build(description, plugin_file, destination_directory, filename):
+def build(
+    description: bootstrap.Description,
+    plugin_file: str,
+    destination_directory: str,
+    filename: str
+) -> bool:
     """
     This method compiles all necessary plugin files.
-    :param description: bootstrap.Description
-    :param plugin_file: string
-    :param destination_directory: string
-    :param filename: string
-    :return:
     """
     write_header(description, destination_directory, filename)
 

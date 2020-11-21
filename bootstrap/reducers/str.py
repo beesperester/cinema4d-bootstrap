@@ -5,11 +5,12 @@ This module provides methods for reducing Description to locales
 __author__ = "Bernhard Esperester <bernhard@esperester.de>"
 
 
-def reduce_strings(description, locale=None):
+def reduce_strings(
+    description: bootstrap.Description,
+    locale: str = None
+) -> dict:
     """
     This method reduces Description instance to nested locales dictionary.
-    :param description: bootstrap.Description
-    :return: dict
     """
     if locale is None:
         locales = {}

@@ -7,11 +7,9 @@ __author__ = "Bernhard Esperester <bernhard@esperester.de>"
 from bootstrap.classes.description import IdError
 
 
-def reduce_header(description):
+def reduce_header(description: bootstrap.Description) -> dict:
     """
     This method reduces Description instance to nested header dictionary.
-    :param description: bootstrap.Description
-    :return: dict
     """
     data = []
 
