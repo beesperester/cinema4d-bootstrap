@@ -12,7 +12,7 @@ class Template(object):
     This class models a generic Template
     """
 
-    def __init__(self, template_string):
+    def __init__(self, template_string: str):
         """
         This method initializes a new instance of the Template class.
         :param template_string: string
@@ -21,7 +21,7 @@ class Template(object):
         self.template_string = template_string
 
     @classmethod
-    def PrepareData(cls, data):
+    def PrepareData(cls, data: dict):
         """
         This method implements.
         :param name: string
@@ -35,14 +35,10 @@ class Template(object):
 
         return dataPrepared
 
-    def Render(self, data=None):
+    def Render(self, data: dict):
         """Render the template with the provided data.
-
-        Args:
-            data:   dict
-
-        Returns:
-            string
+        :param data: dict
+        :return: string
         """
         if data is None:
             data = {}
