@@ -1,4 +1,16 @@
+"""
+This module provides methods for reducing Description to locales
+"""
+
+__author__ = "Bernhard Esperester <bernhard@esperester.de>"
+
+
 def reduce_strings(description, locale=None):
+    """
+    This method reduces Description instance to nested locales dictionary.
+    :param description: bootstrap.Description
+    :return: dict
+    """
     if locale is None:
         locales = {}
 
@@ -7,9 +19,9 @@ def reduce_strings(description, locale=None):
                 locales[key] = reduce_strings(description, key)
 
         return locales
-    
+
     locales = []
-    
+
     if isinstance(description.locales, dict):
         if locale in description.locales.keys():
             locales.append({
@@ -19,6 +31,8 @@ def reduce_strings(description, locale=None):
 
     if isinstance(description.value, list):
         for item in description.value:
-            locales = locales + list(filter(None, reduce_strings(item, locale)))
+            locales = locales + list(
+                filter(None, reduce_strings(item, locale))
+            )
 
     return locales
