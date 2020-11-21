@@ -1,16 +1,34 @@
-from bootstrap.template import Template
+"""
+This module provides methods for rendering locales
+"""
+
+__author__ = "Bernhard Esperester <bernhard@esperester.de>"
+
+from bootstrap.classes.template import Template
 
 locales_container = Template(
-"""STRINGTABLE {id}
+    """STRINGTABLE {id}
 {{
     {value}
 }}
 """
 )
+"""
+Template for rendering locales container
+"""
 
 locales_assignment = Template("{key} \"{value}\";")
+"""
+Template for rendering variable assignment
+"""
+
 
 def render_strings(strings_reduced):
+    """
+    This method applies template rendering to the provided input.
+    :param strings_reduced: dict
+    :return: string
+    """
     locales = {}
 
     for key, value in strings_reduced.items():

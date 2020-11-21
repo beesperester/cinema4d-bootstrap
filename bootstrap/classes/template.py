@@ -1,5 +1,6 @@
-"""Template module. This module provides the class "Template"
-which acts as a simple template engine."""
+"""
+This module provides generic Template class
+"""
 
 __author__ = "Bernhard Esperester <bernhard@esperester.de>"
 
@@ -7,27 +8,24 @@ import re
 
 
 class Template(object):
-    """Template class."""
+    """
+    This class models a generic Template
+    """
 
-    def __init__(self, templateString):
-        """Initialize instance of Template with a
-        python format string.
-
-        Args:
-            templateString: string
+    def __init__(self, template_string):
         """
-        self.templateString = templateString
+        This method initializes a new instance of the Template class.
+        :param template_string: string
+        :return:
+        """
+        self.template_string = template_string
 
     @classmethod
     def PrepareData(cls, data):
-        """Class method for preparing data
-        before it is inserted into the template.
-
-        Args:
-            data:   dict
-
-        Returns:
-            dict
+        """
+        This method implements.
+        :param name: string
+        :return: mixed
         """
         dataPrepared = data.copy()
 
@@ -53,7 +51,7 @@ class Template(object):
 
         lines = []
 
-        for line in self.templateString.split("\n"):
+        for line in self.template_string.split("\n"):
             groups = re.findall(formatPattern, line)
 
             # remove format groups where no data is provided
