@@ -5,5 +5,4 @@ from bootstrap.classes.description import Description,\
     Assignment,\
     Group,\
     Container
-
 from bootstrap.classes.template import Template

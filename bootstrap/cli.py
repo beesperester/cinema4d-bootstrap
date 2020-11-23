@@ -16,29 +16,10 @@ from bootstrap.io import \
     write_locales, \
     compile_plugin
 from bootstrap.utilities.path import assert_directories
+from bootstrap.utilities.cli import \
+    cli_format_error, \
+    cli_format_success
 from bootstrap.classes.fp import Left, Right, Pipe
-
-
-def cli_format_error(message: str) -> str:
-    """
-    This method takes an error message and formats it with a red
-    colored "Error:" prefix for displaying it in the console.
-    """
-    return "{} {}".format(
-        colorama.Fore.RED + "Error:" + colorama.Style.RESET_ALL,
-        message
-    )
-
-
-def cli_format_success(message: str) -> str:
-    """
-    This method takes a success message and formats it with a green
-    colored "Success:" prefix for displaying it in the console.
-    """
-    return "{} {}".format(
-        colorama.Fore.GREEN + "Success:" + colorama.Style.RESET_ALL,
-        message
-    )
 
 
 def assert_plugin_path(config: dict) -> dict:
@@ -52,11 +33,8 @@ def assert_plugin_path(config: dict) -> dict:
 
 
 def assert_python_module(config: dict) -> dict:
-    plugin_dirname, plugin_filename = os.path.split(config["plugin_path"])
-    plugin_name, plugin_extension = os.path.splitext(plugin_filename)
-
     spec = importlib.util.spec_from_file_location(
-        plugin_name,
+        config["name"],
         config["plugin_path"]
     )
 
@@ -64,16 +42,9 @@ def assert_python_module(config: dict) -> dict:
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
-        destination = config["destination"]
-
-        if not destination:
-            destination = plugin_dirname
-
         return Right({
             **config,
-            "module": module,
-            "destination": destination,
-            "name": plugin_name
+            "module": module
         })
 
     return Left("{} is not a valid python module".format(plugin))
@@ -102,10 +73,22 @@ def assert_root_attribute_type(config: dict) -> dict:
 
 
 def assert_destination(config: dict) -> dict:
-    try:
-        assert_directories(config["destination"])
+    plugin_dirname, plugin_filename = os.path.split(config["plugin_path"])
+    plugin_name, plugin_extension = os.path.splitext(plugin_filename)
 
-        return Right(config)
+    destination = config["destination"]
+
+    if not destination:
+        destination = plugin_dirname
+
+    try:
+        assert_directories(destination)
+
+        return Right({
+            **config,
+            "destination": destination,
+            "name": plugin_name
+        })
     except Exception as e:
         return Left(e)
 
@@ -190,10 +173,10 @@ def create_plugin(config: dict) -> dict:
 def assert_plugin_config(config: dict) -> dict:
     return Pipe([
         assert_plugin_path,
+        assert_destination,
         assert_python_module,
         assert_root_attribute,
-        assert_root_attribute_type,
-        assert_destination
+        assert_root_attribute_type
     ])(Right(config))
 
 
