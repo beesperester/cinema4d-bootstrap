@@ -4,6 +4,8 @@ This module provides methods for reducing Description to resource
 
 __author__ = "Bernhard Esperester <bernhard@esperester.de>"
 
+import bootstrap
+
 
 def reduce_resource(description: bootstrap.Description) -> dict:
     """

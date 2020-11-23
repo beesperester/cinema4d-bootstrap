@@ -60,7 +60,7 @@ def write_resource(
     with open(destination_file, "w") as f:
         f.write(contents)
 
-    print("done writing {}".format(destination_file))
+    return destination_file
 
 
 def write_header(
@@ -85,10 +85,10 @@ def write_header(
     with open(destination_file, "w") as f:
         f.write(contents)
 
-    print("done writing {}".format(destination_file))
+    return destination_file
 
 
-def write_strings(
+def write_locales(
     description: bootstrap.Description,
     destination_directory: str,
     filename: str
@@ -97,6 +97,8 @@ def write_strings(
     This method compiles the description to string files.
     """
     strings_rendered = render_strings(reduce_strings(description))
+
+    destination_files = []
 
     for key, contents in strings_rendered.items():
         destination_file = os.path.join(
@@ -111,7 +113,9 @@ def write_strings(
         with open(destination_file, "w") as f:
             f.write(contents)
 
-        print("done writing {}".format(destination_file))
+        destination_files.append(destination_file)
+
+    return ", ".join(destination_files)
 
 
 def compile_plugin(
@@ -194,7 +198,7 @@ def compile_plugin(
         with open(compiled_plugin_file, "w") as output_file:
             output_file.write("\n".join(lines_computed))
 
-        print("done writing {}".format(compiled_plugin_file))
+    return compiled_plugin_file
 
 
 def build(
@@ -210,7 +214,7 @@ def build(
 
     write_resource(description, destination_directory, filename)
 
-    write_strings(description, destination_directory, filename)
+    write_locales(description, destination_directory, filename)
 
     compile_plugin(plugin_file, destination_directory, filename)
 

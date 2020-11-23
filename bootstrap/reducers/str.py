@@ -4,6 +4,8 @@ This module provides methods for reducing Description to locales
 
 __author__ = "Bernhard Esperester <bernhard@esperester.de>"
 
+import bootstrap
+
 
 def reduce_strings(
     description: bootstrap.Description,

@@ -4,6 +4,7 @@ This module provides methods for reducing Description to headers
 
 __author__ = "Bernhard Esperester <bernhard@esperester.de>"
 
+import bootstrap
 from bootstrap.classes.description import IdError
 
 

@@ -21,25 +21,37 @@ class Pipe(object):
         return reduce(reducer, [value] + self.items)
 
 
-class Right(object):
+class Monad(object):
+
+    def __or__(self, func):
+        return self.map(func)
+
+
+class Either(Monad):
+
+    def map(self, value):
+        raise NotImplementedError("Map is not implemented")
+
+
+class Right(Either):
     """
-    This class defines the Right side of a monad
+    This class defines the Right side of an Either Monad
     """
 
     def __init__(self, value):
         self.value = value
 
-    def map(self, method):
-        return method(self.value)
+    def map(self, func):
+        return func(self.value)
 
 
-class Left(object):
+class Left(Either):
     """
-    This class defines the Left side of a monad
+    This class defines the Left side of an Either Monad
     """
 
     def __init__(self, value):
         self.value = value
 
-    def map(self, method):
+    def map(self, func):
         return Left(self.value)
