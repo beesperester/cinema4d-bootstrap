@@ -26,8 +26,10 @@ def cli_format_error(message: str) -> str:
 
 
 def assert_plugin_path(config):
-    if os.path.isfile(config["plugin_path"]) \ 
-    and config["plugin_path"].endswith(".py"):
+    if (
+        os.path.isfile(config["plugin_path"]) and
+        config["plugin_path"].endswith(".py")
+    ):
         return Right(config)
 
     return Left("{} is not a valid python file".format(config["plugin_path"]))
@@ -46,9 +48,15 @@ def assert_python_module(config):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
+        destination = config["destination"]
+
+        if not destination:
+            destination = plugin_dirname
+
         return Right({
             **config,
-            "module": module
+            "module": module,
+            "destination": destination
         })
 
     return Left("{} is not a valid python module".format(plugin))
@@ -66,7 +74,7 @@ def assert_root_attribute(config):
         return Left(e)
 
 
-def assert_root_description(config):
+def assert_root_attribute_type(config):
     if isinstance(config["root"], bootstrap.Description):
         return Right(config)
 
@@ -78,7 +86,7 @@ def assert_root_description(config):
 
 def assert_destination(config):
     try:
-        assert_directories(destination)
+        assert_directories(config["destination"])
 
         return Right(config)
     except Exception as e:
@@ -90,35 +98,22 @@ def module_build(args: argparse.Namespace) -> None:
     This method takes all the arguments from cli and tries to build
     the plugin.
     """
-    plugin = args.plugin
-    plugindirname, pluginfilename = os.path.split(plugin)
-    pluginname, pluginextension = os.path.splitext(pluginfilename)
 
-    assert(os.path.isfile(plugin) and plugin.endswith(".py")), \
-        "{} is not a valid python file".format(plugin)
+    config = {
+        "plugin_path": args.plugin,
+        "destination": args.destination
+    }
 
-    spec = importlib.util.spec_from_file_location(pluginname, plugin)
+    result = Pipe([
+        assert_plugin_path,
+        assert_python_module,
+        assert_root_attribute,
+        assert_root_attribute_type,
+        assert_destination
+    ])(Right(config))
 
-    assert(spec), "{} is not a valid python module".format(plugin)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-
-    # assert presence of attribute root in plugin module
-    try:
-        getattr(module, "root")
-    except AttributeError as e:
-        raise AssertionError(e)
-
-    root = module.root
-
-    # assert attribute root is of type bootstrap.Description
-    assert(isinstance(root, bootstrap.Description)), \
-        "plugin must define variable \"root\" of type \"bootstrap.Description\""
-
-    if args.destination:
-        destination = args.destination
-    else:
-        destination = plugindirname
+    if isinstance(result, Left):
+        raise AssertionError(result.value)
 
 
 def main() -> None:
