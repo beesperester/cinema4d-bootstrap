@@ -1,5 +1,5 @@
 """
-This module provides methods for working with pipes
+This module provides methods for working in functional programming style
 """
 
 import traceback
@@ -52,6 +52,10 @@ class Left(Either):
 
 
 def encase(func):
+    """
+    This function wraps a method that might fail and turns it into
+    either Right or Left monads
+    """
     def func_encased(value):
         try:
             return Right(func(value))
@@ -62,6 +66,9 @@ def encase(func):
 
 
 def pipe(items):
+    """
+    This function creates a pipe in which functions are applied in order
+    """
     def callback(value):
         def reducer(a, b):
             return a.map(b)
@@ -72,24 +79,10 @@ def pipe(items):
 
 
 def chain(func):
+    """
+    This function adds chaining capabilities to pipes
+    """
     def callback(value):
         return func(Right(value))
 
     return callback
-
-
-if __name__ == "__main__":
-    pipe1 = pipe([
-        encase(lambda x: x + 1)
-    ])
-
-    pipe2 = pipe([
-        encase(lambda x: x * 2)
-    ])
-
-    result = pipe([
-        chain(pipe1),
-        chain(pipe2)
-    ])(Right(1))
-
-    print(result)

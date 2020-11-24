@@ -2,8 +2,6 @@
 This module provides generic Description classes and sugared classes
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 import hashlib
 
 
@@ -23,7 +21,7 @@ class Description(object):
         config: dict
     ) -> None:
         """
-        This method initializes a new instance of the Description class.
+        This method initializes a new instance of the Description class
         """
         default_config = {
             "id": None,
@@ -40,7 +38,7 @@ class Description(object):
     ) -> any:
         """
         This method implements __getattr__ for looking up
-        attributes from config dictionary.
+        attributes from config dictionary
         """
         if name in self.config.keys():
             return self.config[name]
@@ -52,7 +50,7 @@ class Description(object):
     def GetId(self) -> int:
         """
         This method implements the hashing of the id attribute
-        as an integer.
+        as an integer
         """
         if not self.id:
             raise IdError("No id has been assigned")
@@ -74,7 +72,7 @@ class Assignment(Description):
         config: dict = None
     ) -> None:
         """
-        This method initializes a new instance of the Assignment class.
+        This method initializes a new instance of the Assignment class
         """
         if config is None:
             config = {}
@@ -99,7 +97,7 @@ class Group(Description):
         config: dict = None
     ) -> None:
         """
-        This method initializes a new instance of the Group class.
+        This method initializes a new instance of the Group class
         """
         if config is None:
             config = {}
@@ -124,7 +122,7 @@ class Container(Description):
         config: dict = None
     ) -> None:
         """
-        This method initializes a new instance of the Container class.
+        This method initializes a new instance of the Container class
         """
         if config is None:
             config = {}

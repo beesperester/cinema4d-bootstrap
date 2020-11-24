@@ -2,8 +2,6 @@
 This module provides methods for compiling the plugin
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 
 import os
 import importlib
@@ -287,6 +285,9 @@ assert_plugin_config = pipe([
     encase(assert_root_attribute),
     encase(assert_root_attribute_type)
 ])
+"""
+This creates a pipe for asserting the correctness of the Config instance
+"""
 
 
 # Right -> Either
@@ -296,6 +297,9 @@ create_plugin = pipe([
     encase(write_locales),
     encase(write_plugin)
 ])
+"""
+This creates a pipe for writing the plugin files
+"""
 
 
 # Right -> Either
@@ -303,3 +307,6 @@ build_plugin = pipe([
     chain(assert_plugin_config),
     chain(create_plugin)
 ])
+"""
+This creates a pipe for creating the plugin
+"""

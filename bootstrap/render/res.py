@@ -2,8 +2,6 @@
 This module provides methods for rendering resources
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 from bootstrap.classes.template import Template
 
 resource_container = Template(
@@ -24,7 +22,7 @@ Template for rendering variable assignment
 
 def render_resource(resource_reduced: dict) -> str:
     """
-    This method applies template rendering to the provided input.
+    This method applies template rendering to the provided input
     """
     data = {**resource_reduced}
 

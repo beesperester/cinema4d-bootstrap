@@ -2,8 +2,6 @@
 This module provides methods for reducing Description to locales
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 import bootstrap
 
 
@@ -12,7 +10,7 @@ def reduce_strings(
     locale: str = None
 ) -> dict:
     """
-    This method reduces Description instance to nested locales dictionary.
+    This method reduces Description instance to nested locales dictionary
     """
     if locale is None:
         locales = {}

@@ -2,8 +2,6 @@
 This module provides methods for compiling the plugin via cli.
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 import argparse
 import bootstrap
 import colorama
@@ -20,7 +18,7 @@ from bootstrap.classes.fp import Left, Right
 def cli_module_build(args: argparse.Namespace) -> None:
     """
     This method takes all the arguments from cli and tries to build
-    the plugin.
+    the plugin
     """
     plugin_dirname, plugin_filename = os.path.split(args.plugin)
     plugin_name, plugin_extension = os.path.splitext(plugin_filename)
@@ -48,7 +46,7 @@ def cli_module_build(args: argparse.Namespace) -> None:
 
 def main() -> None:
     """
-    This method creates all the cli.
+    This method creates the cli
     """
     parser = argparse.ArgumentParser(
         description="Bootstrap a Cinema 4D plugin."

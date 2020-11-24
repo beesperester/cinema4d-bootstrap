@@ -2,8 +2,6 @@
 This module provides methods for rendering locales
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 from bootstrap.classes.template import Template
 
 locales_container = Template(
@@ -24,9 +22,7 @@ Template for rendering variable assignment
 
 def render_strings(strings_reduced: dict) -> str:
     """
-    This method applies template rendering to the provided input.
-    :param strings_reduced: dict
-    :return: string
+    This method applies template rendering to the provided input
     """
     locales = {}
 

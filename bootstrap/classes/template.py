@@ -2,8 +2,6 @@
 This module provides generic Template class
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 import re
 
 
@@ -17,7 +15,7 @@ class Template(object):
         template_string: str
     ) -> None:
         """
-        This method initializes a new instance of the Template class.
+        This method initializes a new instance of the Template class
         """
         self.template_string = template_string
 
@@ -27,7 +25,7 @@ class Template(object):
         data: dict
     ) -> None:
         """
-        This method prepares data for rendering.
+        This method prepares data for rendering
         """
         dataPrepared = data.copy()
 
@@ -42,7 +40,7 @@ class Template(object):
         data: dict
     ) -> str:
         """
-        Render the template with the provided data.
+        Render the template with the provided data
         """
         if data is None:
             data = {}
