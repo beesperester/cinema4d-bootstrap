@@ -6,6 +6,10 @@ Simplify your Cinema 4D plugin development process by generating all the necessa
 
 ## Table of contents
 1. [Description](#Description)
+1. [Installation](#Installation)
+1. [Usage](#Usage)
+    - [Build](#Build)
+    - [Create](#Create)
 1. [Examples](#Examples)
 1. [Plugins](#Plugins)
 
@@ -13,9 +17,7 @@ Simplify your Cinema 4D plugin development process by generating all the necessa
 
 With **bootstrap** you can automate a lot of the back and force gerally associated with writing Cinema 4D plugins. No need to write all those pesky header, string and resource files by hand. Just define them in your plugin.py file and automagically build your plugin.h, plugin.res, plugin.str and plugin.pyp file.
 
-> You need to use **c4dpy** to build your plugin
-
-In the following excerpt you can see a very basic setup for a **REAL** value called **STRENGTH** which willbe displayed as **PERCENT**. This is wrappend in a **GROUP** with the name **SETTINGS** which is itself wrapped in a **CONTAINER** that represents the plugin. 
+In the following excerpt you can see a very basic setup for a **REAL** value called **STRENGTH** which willbe displayed as **PERCENT**. This is wrappend in a **GROUP** with the name **SETTINGS** which is itself wrapped in a **CONTAINER** that represents the plugin:
 
 ```python
 #----begin_resource_section----
@@ -113,6 +115,54 @@ STRENGTH = 34087515
 [...]
 ```
 
+## Installation
+
+1. First you need to get the path to **c4dpy**. On macOS this will be something like this:
+```
+/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy
+```
+
+For further information about **c4dpy** please refer to the official [documentation](https://developers.maxon.net/docs/Cinema4DPythonSDK/html/manuals/introduction/python_c4dpy.html).
+
+2. Next you need to download [pip](https://pip.pypa.io/en/stable/installing/)
+```
+$ curl https://bootstrap.pypa.io/get-pip.py -o /path/to/some/directory/get-pip.py
+```
+
+3. For installing pip you need to make sure to use the path to **c4dpy** instead of your system's python  installation
+```
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" /path/to/some/directory/get-pip.py
+```
+
+4. Now you are ready to install **bootstrap4c4d** via pip
+```
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m pip install beesperester/bootstrap
+```
+
+## Usage
+
+Display available cli arguments:
+
+```
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap -h
+```
+
+### Build
+
+Build an existing python plugin which has already been set up with **bootstrap4c4d**:
+
+```
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap build /path/to/your/plugin.py
+```
+
+### Create
+
+Create a new plugin with **bootstrap4c4d**:
+
+```
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap create YOUR_PLUGIN_NAME tag /path/to/your/plugin_directory
+```
+
 ## Examples
 
 Check out `tmyplugin.py` for a simple working example.
@@ -127,14 +177,21 @@ This will be where you setup the layout of your plugin, this will be omitted in 
 #----end_resource_section----
 ```
 
-This will be where you define your plugin IDs, the static IDs will be injected as integers during the build process
+This will be where you define your plugin IDs, the static IDs will be injected as integers during the build process:
+
 ```python
 #----begin_id_section----
 ...
 #----end_id_section----
 ```
 
-Executing the `build.py` file with c4dpy will generate the following files:
+Using **bootstrap4c4d** like so will build the plugin:
+
+```
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap build tmyplugin.py
+```
+
+This will result in the following files beeing created:
 
 ```python
 tmyplugin.pyp # the actual plugin file
@@ -145,6 +202,6 @@ res/strings_us/description/tmyplugin.str # the localized strings
 
 ## Plugins
 
-Plugins that are using bootstrap:
+Plugins build with **bootstrap4c4d**:
 
 1. [cinema4d-jiggle](https://github.com/beesperester/cinema4d-jiggle)
