@@ -1,6 +1,6 @@
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) ![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main)
 
-# cinema4d-bootstrap
+# bootstrap4c4d
 
 Simplify your Cinema 4D plugin development process by generating all the necessary c-headers, strings and resources automatically.
 
@@ -12,10 +12,11 @@ Simplify your Cinema 4D plugin development process by generating all the necessa
     - [Create](#Create)
 1. [Examples](#Examples)
 1. [Plugins](#Plugins)
+1. [To do](#To-do)
 
 ## Description
 
-With **bootstrap** you can automate a lot of the back and force gerally associated with writing Cinema 4D plugins. No need to write all those pesky header, string and resource files by hand. Just define them in your plugin.py file and automagically build your plugin.h, plugin.res, plugin.str and plugin.pyp file.
+With **bootstrap** you can automate a lot of the back and fore generally associated with writing Cinema 4D plugins. No need to write all those pesky header, string and resource files by hand. Just define them in your plugin.py file and automagically build your plugin.h, plugin.res, plugin.str and plugin.pyp file.
 
 In the following excerpt you can see a very basic setup for a **REAL** value called **STRENGTH** which willbe displayed as **PERCENT**. This is wrappend in a **GROUP** with the name **SETTINGS** which is itself wrapped in a **CONTAINER** that represents the plugin:
 
@@ -135,6 +136,9 @@ $ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" /path/to/so
 ```
 
 4. Now you are ready to install **bootstrap4c4d** via pip
+
+> This is not yet possible, plugin needs to be published to pypi
+
 ```
 $ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m pip install beesperester/bootstrap
 ```
@@ -156,6 +160,8 @@ $ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstra
 ```
 
 ### Create
+
+> This is not yet implemented
 
 Create a new plugin with **bootstrap4c4d**:
 
@@ -205,3 +211,9 @@ res/strings_us/description/tmyplugin.str # the localized strings
 Plugins build with **bootstrap4c4d**:
 
 1. [cinema4d-jiggle](https://github.com/beesperester/cinema4d-jiggle)
+
+## To do
+
+- [ ] Rewrite build process in a functional way
+- [ ] Add create functionality to cli / io
+- [ ] Publish package to pypi
