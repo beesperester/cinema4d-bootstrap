@@ -7,177 +7,16 @@ __author__ = "Bernhard Esperester <bernhard@esperester.de>"
 import argparse
 import bootstrap
 import colorama
-import importlib
 import os
 
-from bootstrap.io import \
-    write_resource, \
-    write_header, \
-    write_locales, \
-    compile_plugin
+from bootstrap.io import Config, \
+    assert_plugin_config, \
+    create_plugin
 from bootstrap.utilities.path import assert_directories
 from bootstrap.utilities.cli import \
     cli_format_error, \
     cli_format_success
-from bootstrap.classes.fp import Left, Right, Pipe
-
-
-def assert_plugin_path(config: dict) -> dict:
-    if (
-        os.path.isfile(config["plugin_path"]) and
-        config["plugin_path"].endswith(".py")
-    ):
-        return Right(config)
-
-    return Left("{} is not a valid python file".format(config["plugin_path"]))
-
-
-def assert_python_module(config: dict) -> dict:
-    spec = importlib.util.spec_from_file_location(
-        config["name"],
-        config["plugin_path"]
-    )
-
-    if spec:
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        return Right({
-            **config,
-            "module": module
-        })
-
-    return Left("{} is not a valid python module".format(plugin))
-
-
-def assert_root_attribute(config: dict) -> dict:
-    try:
-        root = getattr(config["module"], "root")
-
-        return Right({
-            **config,
-            "root": root
-        })
-    except AttributeError as e:
-        return Left(e)
-
-
-def assert_root_attribute_type(config: dict) -> dict:
-    if isinstance(config["root"], bootstrap.Description):
-        return Right(config)
-
-    return Left((
-        "plugin must define variable 'root' ",
-        "of type 'bootstrap.Description'"
-    ))
-
-
-def assert_destination(config: dict) -> dict:
-    plugin_dirname, plugin_filename = os.path.split(config["plugin_path"])
-    plugin_name, plugin_extension = os.path.splitext(plugin_filename)
-
-    destination = config["destination"]
-
-    if not destination:
-        destination = plugin_dirname
-
-    try:
-        assert_directories(destination)
-
-        return Right({
-            **config,
-            "destination": destination,
-            "name": plugin_name
-        })
-    except Exception as e:
-        return Left(e)
-
-
-def build_resource(config: dict) -> dict:
-    try:
-        result = write_resource(
-            config["root"],
-            config["destination"],
-            config["name"]
-        )
-
-        message = "done writing {}".format(result)
-
-        print(cli_format_success(message))
-
-        return Right(config)
-    except Exception as e:
-        return Left(e)
-
-
-def build_header(config: dict) -> dict:
-    try:
-        result = write_header(
-            config["root"],
-            config["destination"],
-            config["name"]
-        )
-
-        message = "done writing {}".format(result)
-
-        print(cli_format_success(message))
-
-        return Right(config)
-    except Exception as e:
-        return Left(e)
-
-
-def build_locales(config: dict) -> dict:
-    try:
-        result = write_locales(
-            config["root"],
-            config["destination"],
-            config["name"]
-        )
-
-        message = "done writing {}".format(result)
-
-        print(cli_format_success(message))
-
-        return Right(config)
-    except Exception as e:
-        return Left(e)
-
-
-def build_plugin(config: dict) -> dict:
-    try:
-        result = compile_plugin(
-            config["plugin_path"],
-            config["destination"],
-            config["name"]
-        )
-
-        message = "done writing {}".format(result)
-
-        print(cli_format_success(message))
-
-        return Right(config)
-    except Exception as e:
-        return Left(e)
-
-
-def create_plugin(config: dict) -> dict:
-    return Pipe([
-        build_resource,
-        build_header,
-        build_locales,
-        build_plugin
-    ])(Right(config))
-
-
-def assert_plugin_config(config: dict) -> dict:
-    return Pipe([
-        assert_plugin_path,
-        assert_destination,
-        assert_python_module,
-        assert_root_attribute,
-        assert_root_attribute_type
-    ])(Right(config))
+from bootstrap.classes.fp import Left, Right, pipe, chain
 
 
 def cli_module_build(args: argparse.Namespace) -> None:
@@ -185,15 +24,30 @@ def cli_module_build(args: argparse.Namespace) -> None:
     This method takes all the arguments from cli and tries to build
     the plugin.
     """
+    plugin_dirname, plugin_filename = os.path.split(args.plugin)
+    plugin_name, plugin_extension = os.path.splitext(plugin_filename)
 
-    config = {
-        "plugin_path": args.plugin,
-        "destination": args.destination
-    }
+    destination = args.destination
 
-    return Pipe([
-        assert_plugin_config,
-        create_plugin
+    if not destination:
+        destination = plugin_dirname
+
+    root_name = args.root
+
+    if not root_name:
+        root_name = "root"
+
+    config = Config(
+        args.plugin,
+        plugin_name,
+        destination,
+        root_name,
+        None,
+        None)
+
+    return pipe([
+        chain(assert_plugin_config),
+        chain(create_plugin)
     ])(Right(config))
 
 
@@ -219,6 +73,13 @@ def main() -> None:
         "plugin",
         type=str,
         help="path to a plugin python file"
+    )
+
+    build.add_argument(
+        "-r",
+        "--root",
+        type=str,
+        help="name of root variable"
     )
 
     build.add_argument(

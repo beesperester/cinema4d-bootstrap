@@ -6,10 +6,14 @@ __author__ = "Bernhard Esperester <bernhard@esperester.de>"
 
 
 import os
+import importlib
 
+from collections import namedtuple
 from imp import load_source
 
 import bootstrap
+from bootstrap.classes.fp import Either, Left, Right, pipe, encase
+
 from bootstrap.reducers.res import reduce_resource
 from bootstrap.reducers.h import reduce_header
 from bootstrap.reducers.str import reduce_strings
@@ -38,20 +42,28 @@ Prefix to prepend to compiled files
 """
 
 
-def write_resource(
-    description: bootstrap.Description,
-    destination_directory: str,
-    filename: str
-) -> None:
+class Config(object):
+
+    def __init__(self, path, name, destination, root_name, root, module):
+        self.path = path
+        self.name = name
+        self.destination = destination
+        self.root_name = root_name
+        self.root = root
+        self.module = module
+
+
+def write_resource(config: Config) -> Config:
     """
     This method compiles the description to a resource file.
     """
     destination_file = os.path.join(
-        destination_directory, "res/description",
-        "{}.res".format(filename)
+        config.destination,
+        "res/description",
+        "{}.res".format(config.name)
     )
 
-    contents = render_resource(reduce_resource(description))
+    contents = render_resource(reduce_resource(config.root))
 
     contents = "\n".join([COMMENT_C + PREFIX, contents])
 
@@ -60,23 +72,20 @@ def write_resource(
     with open(destination_file, "w") as f:
         f.write(contents)
 
-    return destination_file
+    return config
 
 
-def write_header(
-    description: bootstrap.Description,
-    destination_directory: str,
-    filename: str
-) -> None:
+def write_header(config: Config) -> Config:
     """
     This method compiles the description to a header file.
     """
     destination_file = os.path.join(
-        destination_directory, "res/description",
-        "{}.h".format(filename)
+        config.destination,
+        "res/description",
+        "{}.h".format(config.name)
     )
 
-    contents = render_header(reduce_header(description))
+    contents = render_header(reduce_header(config.root))
 
     contents = "\n".join([COMMENT_C + PREFIX, contents])
 
@@ -85,25 +94,24 @@ def write_header(
     with open(destination_file, "w") as f:
         f.write(contents)
 
-    return destination_file
+    return config
 
 
-def write_locales(
-    description: bootstrap.Description,
-    destination_directory: str,
-    filename: str
-) -> None:
+def write_locales(config: Config) -> Config:
     """
     This method compiles the description to string files.
     """
-    strings_rendered = render_strings(reduce_strings(description))
+    strings_rendered = render_strings(reduce_strings(config.root))
 
     destination_files = []
 
     for key, contents in strings_rendered.items():
         destination_file = os.path.join(
-            destination_directory, "res", key, "description",
-            "{}.str".format(filename)
+            config.destination,
+            "res",
+            key,
+            "description",
+            "{}.str".format(config.name)
         )
 
         contents = "\n".join([COMMENT_C + PREFIX, contents])
@@ -115,30 +123,20 @@ def write_locales(
 
         destination_files.append(destination_file)
 
-    return ", ".join(destination_files)
+    return config
 
 
-def compile_plugin(
-    plugin_file: str,
-    destination_directory: str,
-    filename: str
-) -> None:
+def write_plugin(config: Config) -> Config:
     """
     This method compiles the python plugin to a cinema 4d pyp file.
     """
-    plugin_filename, plugin_fileextension = os.path.splitext(
-        os.path.basename(plugin_file)
-    )
-
-    with open(plugin_file, "r") as input_file:
+    with open(config.path, "r") as input_file:
         lines = input_file.read().split("\n")
 
         lines_computed = []
 
         ignore_lines = False
         id_section = False
-
-        module = load_source(plugin_filename, plugin_file)
 
         for line in lines:
             # id section
@@ -164,12 +162,12 @@ def compile_plugin(
                 variables = [x.strip() for x in line.split("=")]
 
                 if variables:
-                    variableName = variables[0]
+                    variable_name = variables[0]
 
                     lines_computed.append(
                         "{} = {}".format(
-                            variableName,
-                            getattr(module, variableName)
+                            variable_name,
+                            getattr(config.module, variable_name)
                         )
                     )
 
@@ -190,7 +188,7 @@ def compile_plugin(
                 lines_computed.append(line)
 
         compiled_plugin_file = os.path.join(
-            destination_directory, "{}.pyp".format(filename)
+            config.destination, "{}.pyp".format(config.name)
         )
 
         assert_directories(compiled_plugin_file, True)
@@ -198,24 +196,72 @@ def compile_plugin(
         with open(compiled_plugin_file, "w") as output_file:
             output_file.write("\n".join(lines_computed))
 
-    return compiled_plugin_file
+        return config
 
 
-def build(
-    description: bootstrap.Description,
-    plugin_file: str,
-    destination_directory: str,
-    filename: str
-) -> bool:
-    """
-    This method compiles all necessary plugin files.
-    """
-    write_header(description, destination_directory, filename)
+def assert_plugin_path(config: Config) -> Config:
+    if (
+        os.path.isfile(config.path) and
+        config.path.endswith(".py")
+    ):
+        return config
 
-    write_resource(description, destination_directory, filename)
+    raise Exception(
+        "{} is not a valid python file".format(config.path)
+    )
 
-    write_locales(description, destination_directory, filename)
 
-    compile_plugin(plugin_file, destination_directory, filename)
+def assert_python_module(config: Config) -> Config:
+    spec = importlib.util.spec_from_file_location(
+        config.name,
+        config.path
+    )
 
-    return True
+    if spec:
+        config.module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(config.module)
+
+        return config
+
+    raise Exception("{} is not a valid python module".format(plugin))
+
+
+def assert_root_attribute(config: Config) -> Config:
+    config.root = getattr(config.module, config.root_name)
+
+    return config
+
+
+def assert_root_attribute_type(config: Config) -> Config:
+    if isinstance(config.root, bootstrap.Description):
+        return config
+
+    raise Exception((
+        "plugin must define variable 'root' ",
+        "of type 'bootstrap.Description'"
+    ))
+
+
+def assert_destination(config: Config) -> Config:
+    assert_directories(config.destination)
+
+    return config
+
+
+# Right -> Either
+assert_plugin_config = pipe([
+    encase(assert_plugin_path),
+    encase(assert_destination),
+    encase(assert_python_module),
+    encase(assert_root_attribute),
+    encase(assert_root_attribute_type)
+])
+
+
+# Right -> Either
+create_plugin = pipe([
+    encase(write_resource),
+    encase(write_header),
+    encase(write_locales),
+    encase(write_plugin)
+])
