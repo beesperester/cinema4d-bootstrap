@@ -11,3 +11,6 @@ __pycache__
 
 # project
 temp
+dist
+build
+*.egg-info
