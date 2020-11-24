@@ -31,14 +31,15 @@
 This module provides methods for reducing Description to locales
 &#34;&#34;&#34;
 
-__author__ = &#34;Bernhard Esperester &lt;bernhard@esperester.de&gt;&#34;
+import bootstrap
 
 
-def reduce_strings(description, locale=None):
+def reduce_strings(
+    description: bootstrap.Description,
+    locale: str = None
+) -&gt; dict:
     &#34;&#34;&#34;
-    This method reduces Description instance to nested locales dictionary.
-    :param description: bootstrap.Description
-    :return: dict
+    This method reduces Description instance to nested locales dictionary
     &#34;&#34;&#34;
     if locale is None:
         locales = {}
@@ -75,21 +76,20 @@ def reduce_strings(description, locale=None):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="bootstrap.reducers.str.reduce_strings"><code class="name flex">
-<span>def <span class="ident">reduce_strings</span></span>(<span>description, locale=None)</span>
+<span>def <span class="ident">reduce_strings</span></span>(<span>description: <a title="bootstrap.classes.description.Description" href="../classes/description.html#bootstrap.classes.description.Description">Description</a>, locale: str = None) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method reduces Description instance to nested locales dictionary.
-:param description: bootstrap.Description
-:return: dict</p></div>
+<div class="desc"><p>This method reduces Description instance to nested locales dictionary</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def reduce_strings(description, locale=None):
+<pre><code class="python">def reduce_strings(
+    description: bootstrap.Description,
+    locale: str = None
+) -&gt; dict:
     &#34;&#34;&#34;
-    This method reduces Description instance to nested locales dictionary.
-    :param description: bootstrap.Description
-    :return: dict
+    This method reduces Description instance to nested locales dictionary
     &#34;&#34;&#34;
     if locale is None:
         locales = {}

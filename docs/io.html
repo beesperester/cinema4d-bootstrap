@@ -31,14 +31,16 @@
 This module provides methods for compiling the plugin
 &#34;&#34;&#34;
 
-__author__ = &#34;Bernhard Esperester &lt;bernhard@esperester.de&gt;&#34;
-
 
 import os
+import importlib
 
+from collections import namedtuple
 from imp import load_source
 
 import bootstrap
+from bootstrap.classes.fp import Either, Left, Right, pipe, encase, chain
+
 from bootstrap.reducers.res import reduce_resource
 from bootstrap.reducers.h import reduce_header
 from bootstrap.reducers.str import reduce_strings
@@ -67,20 +69,32 @@ Prefix to prepend to compiled files
 &#34;&#34;&#34;
 
 
-def write_resource(description, destination_directory, filename):
+class Config(object):
     &#34;&#34;&#34;
-    This method compiles the description to a resource file.
-    :param description: bootstrap.Description
-    :param destination_directory: string
-    :param filename: string
-    :return:
+    This class represents a container of variables
+    that are used to create the plugin
+    &#34;&#34;&#34;
+
+    def __init__(self, path, name, destination, root_name, root, module):
+        self.path = path
+        self.name = name
+        self.destination = destination
+        self.root_name = root_name
+        self.root = root
+        self.module = module
+
+
+def write_resource(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method compiles the description to a resource file
     &#34;&#34;&#34;
     destination_file = os.path.join(
-        destination_directory, &#34;res/description&#34;,
-        &#34;{}.res&#34;.format(filename)
+        config.destination,
+        &#34;res/description&#34;,
+        &#34;{}.res&#34;.format(config.name)
     )
 
-    contents = render_resource(reduce_resource(description))
+    contents = render_resource(reduce_resource(config.root))
 
     contents = &#34;\n&#34;.join([COMMENT_C + PREFIX, contents])
 
@@ -89,23 +103,20 @@ def write_resource(description, destination_directory, filename):
     with open(destination_file, &#34;w&#34;) as f:
         f.write(contents)
 
-    print(&#34;done writing {}&#34;.format(destination_file))
+    return config
 
 
-def write_header(description, destination_directory, filename):
+def write_header(config: Config) -&gt; Config:
     &#34;&#34;&#34;
-    This method compiles the description to a header file.
-    :param description: bootstrap.Description
-    :param destination_directory: string
-    :param filename: string
-    :return:
+    This method compiles the description to a header file
     &#34;&#34;&#34;
     destination_file = os.path.join(
-        destination_directory, &#34;res/description&#34;,
-        &#34;{}.h&#34;.format(filename)
+        config.destination,
+        &#34;res/description&#34;,
+        &#34;{}.h&#34;.format(config.name)
     )
 
-    contents = render_header(reduce_header(description))
+    contents = render_header(reduce_header(config.root))
 
     contents = &#34;\n&#34;.join([COMMENT_C + PREFIX, contents])
 
@@ -114,23 +125,24 @@ def write_header(description, destination_directory, filename):
     with open(destination_file, &#34;w&#34;) as f:
         f.write(contents)
 
-    print(&#34;done writing {}&#34;.format(destination_file))
+    return config
 
 
-def write_strings(description, destination_directory, filename):
+def write_locales(config: Config) -&gt; Config:
     &#34;&#34;&#34;
-    This method compiles the description to string files.
-    :param description: bootstrap.Description
-    :param destination_directory: string
-    :param filename: string
-    :return:
+    This method compiles the description to string files
     &#34;&#34;&#34;
-    strings_rendered = render_strings(reduce_strings(description))
+    strings_rendered = render_strings(reduce_strings(config.root))
+
+    destination_files = []
 
     for key, contents in strings_rendered.items():
         destination_file = os.path.join(
-            destination_directory, &#34;res&#34;, key, &#34;description&#34;,
-            &#34;{}.str&#34;.format(filename)
+            config.destination,
+            &#34;res&#34;,
+            key,
+            &#34;description&#34;,
+            &#34;{}.str&#34;.format(config.name)
         )
 
         contents = &#34;\n&#34;.join([COMMENT_C + PREFIX, contents])
@@ -140,30 +152,22 @@ def write_strings(description, destination_directory, filename):
         with open(destination_file, &#34;w&#34;) as f:
             f.write(contents)
 
-        print(&#34;done writing {}&#34;.format(destination_file))
+        destination_files.append(destination_file)
+
+    return config
 
 
-def compile_plugin(plugin_file, destination_directory, filename):
+def write_plugin(config: Config) -&gt; Config:
     &#34;&#34;&#34;
-    This method compiles the python plugin to a cinema 4d pyp file.
-    :param plugin_file: string
-    :param destination_directory: string
-    :param filename: string
-    :return:
+    This method compiles the python plugin to a cinema 4d pyp file
     &#34;&#34;&#34;
-    plugin_filename, plugin_fileextension = os.path.splitext(
-        os.path.basename(plugin_file)
-    )
-
-    with open(plugin_file, &#34;r&#34;) as input_file:
+    with open(config.path, &#34;r&#34;) as input_file:
         lines = input_file.read().split(&#34;\n&#34;)
 
         lines_computed = []
 
         ignore_lines = False
         id_section = False
-
-        module = load_source(plugin_filename, plugin_file)
 
         for line in lines:
             # id section
@@ -189,12 +193,12 @@ def compile_plugin(plugin_file, destination_directory, filename):
                 variables = [x.strip() for x in line.split(&#34;=&#34;)]
 
                 if variables:
-                    variableName = variables[0]
+                    variable_name = variables[0]
 
                     lines_computed.append(
                         &#34;{} = {}&#34;.format(
-                            variableName,
-                            getattr(module, variableName)
+                            variable_name,
+                            getattr(config.module, variable_name)
                         )
                     )
 
@@ -215,7 +219,7 @@ def compile_plugin(plugin_file, destination_directory, filename):
                 lines_computed.append(line)
 
         compiled_plugin_file = os.path.join(
-            destination_directory, &#34;{}.pyp&#34;.format(filename)
+            config.destination, &#34;{}.pyp&#34;.format(config.name)
         )
 
         assert_directories(compiled_plugin_file, True)
@@ -223,27 +227,118 @@ def compile_plugin(plugin_file, destination_directory, filename):
         with open(compiled_plugin_file, &#34;w&#34;) as output_file:
             output_file.write(&#34;\n&#34;.join(lines_computed))
 
-        print(&#34;done writing {}&#34;.format(compiled_plugin_file))
+    return config
 
 
-def build(description, plugin_file, destination_directory, filename):
+def assert_plugin_path(config: Config) -&gt; Config:
     &#34;&#34;&#34;
-    This method compiles all necessary plugin files.
-    :param description: bootstrap.Description
-    :param plugin_file: string
-    :param destination_directory: string
-    :param filename: string
-    :return:
+    This method asserts the existence of the python plugin
+    on the filesystem
+
+    Raises:
+        Exception
     &#34;&#34;&#34;
-    write_header(description, destination_directory, filename)
+    if (
+        os.path.isfile(config.path) and
+        config.path.endswith(&#34;.py&#34;)
+    ):
+        return config
 
-    write_resource(description, destination_directory, filename)
+    raise Exception(
+        &#34;{} is not a valid python file&#34;.format(config.path)
+    )
 
-    write_strings(description, destination_directory, filename)
 
-    compile_plugin(plugin_file, destination_directory, filename)
+def assert_python_module(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method loads the provided python plugin as a module
+    and sets the module attribute on the config instance
 
-    return True</code></pre>
+    Raises:
+        Exception
+    &#34;&#34;&#34;
+    spec = importlib.util.spec_from_file_location(
+        config.name,
+        config.path
+    )
+
+    if spec:
+        config.module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(config.module)
+
+        return config
+
+    raise Exception(&#34;{} is not a valid python module&#34;.format(plugin))
+
+
+def assert_root_attribute(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method sets the root attribute on the config instance
+    &#34;&#34;&#34;
+    config.root = getattr(config.module, config.root_name)
+
+    return config
+
+
+def assert_root_attribute_type(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method asserts that the root attribute
+    is an instance of &#39;bootstrap.Description&#39;
+
+    Raises:
+        Exception
+    &#34;&#34;&#34;
+    if isinstance(config.root, bootstrap.Description):
+        return config
+
+    raise Exception((
+        &#34;plugin must define variable &#39;root&#39; &#34;,
+        &#34;of type &#39;bootstrap.Description&#39;&#34;
+    ))
+
+
+def assert_destination(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method asserts the existence of the destination directory
+    &#34;&#34;&#34;
+    assert_directories(config.destination)
+
+    return config
+
+
+# Right -&gt; Either
+assert_plugin_config = pipe([
+    encase(assert_plugin_path),
+    encase(assert_destination),
+    encase(assert_python_module),
+    encase(assert_root_attribute),
+    encase(assert_root_attribute_type)
+])
+&#34;&#34;&#34;
+This creates a pipe for asserting the correctness of the Config instance
+&#34;&#34;&#34;
+
+
+# Right -&gt; Either
+create_plugin = pipe([
+    encase(write_resource),
+    encase(write_header),
+    encase(write_locales),
+    encase(write_plugin)
+])
+&#34;&#34;&#34;
+This creates a pipe for writing the plugin files
+&#34;&#34;&#34;
+
+
+# Right -&gt; Either
+build_plugin = pipe([
+    chain(assert_plugin_config),
+    chain(create_plugin)
+])
+&#34;&#34;&#34;
+This creates a pipe for creating the plugin
+&#34;&#34;&#34;</code></pre>
 </details>
 </section>
 <section>
@@ -268,74 +363,273 @@ def build(description, plugin_file, destination_directory, filename):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="bootstrap.io.build"><code class="name flex">
-<span>def <span class="ident">build</span></span>(<span>description, plugin_file, destination_directory, filename)</span>
+<dt id="bootstrap.io.assert_destination"><code class="name flex">
+<span>def <span class="ident">assert_destination</span></span>(<span>config: <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a>) ‑> <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method compiles all necessary plugin files.
-:param description: bootstrap.Description
-:param plugin_file: string
-:param destination_directory: string
-:param filename: string
-:return:</p></div>
+<div class="desc"><p>This method asserts the existence of the destination directory</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def build(description, plugin_file, destination_directory, filename):
+<pre><code class="python">def assert_destination(config: Config) -&gt; Config:
     &#34;&#34;&#34;
-    This method compiles all necessary plugin files.
-    :param description: bootstrap.Description
-    :param plugin_file: string
-    :param destination_directory: string
-    :param filename: string
-    :return:
+    This method asserts the existence of the destination directory
     &#34;&#34;&#34;
-    write_header(description, destination_directory, filename)
+    assert_directories(config.destination)
 
-    write_resource(description, destination_directory, filename)
-
-    write_strings(description, destination_directory, filename)
-
-    compile_plugin(plugin_file, destination_directory, filename)
-
-    return True</code></pre>
+    return config</code></pre>
 </details>
 </dd>
-<dt id="bootstrap.io.compile_plugin"><code class="name flex">
-<span>def <span class="ident">compile_plugin</span></span>(<span>plugin_file, destination_directory, filename)</span>
+<dt id="bootstrap.io.assert_plugin_config"><code class="name flex">
+<span>def <span class="ident">assert_plugin_config</span></span>(<span>value)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method compiles the python plugin to a cinema 4d pyp file.
-:param plugin_file: string
-:param destination_directory: string
-:param filename: string
-:return:</p></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def compile_plugin(plugin_file, destination_directory, filename):
+<pre><code class="python">def callback(value):
+    def reducer(a, b):
+        return a.map(b)
+
+    return reduce(reducer, [value] + items)</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.io.assert_plugin_path"><code class="name flex">
+<span>def <span class="ident">assert_plugin_path</span></span>(<span>config: <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a>) ‑> <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method asserts the existence of the python plugin
+on the filesystem</p>
+<h2 id="raises">Raises</h2>
+<p>Exception</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assert_plugin_path(config: Config) -&gt; Config:
     &#34;&#34;&#34;
-    This method compiles the python plugin to a cinema 4d pyp file.
-    :param plugin_file: string
-    :param destination_directory: string
-    :param filename: string
-    :return:
+    This method asserts the existence of the python plugin
+    on the filesystem
+
+    Raises:
+        Exception
     &#34;&#34;&#34;
-    plugin_filename, plugin_fileextension = os.path.splitext(
-        os.path.basename(plugin_file)
+    if (
+        os.path.isfile(config.path) and
+        config.path.endswith(&#34;.py&#34;)
+    ):
+        return config
+
+    raise Exception(
+        &#34;{} is not a valid python file&#34;.format(config.path)
+    )</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.io.assert_python_module"><code class="name flex">
+<span>def <span class="ident">assert_python_module</span></span>(<span>config: <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a>) ‑> <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method loads the provided python plugin as a module
+and sets the module attribute on the config instance</p>
+<h2 id="raises">Raises</h2>
+<p>Exception</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assert_python_module(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method loads the provided python plugin as a module
+    and sets the module attribute on the config instance
+
+    Raises:
+        Exception
+    &#34;&#34;&#34;
+    spec = importlib.util.spec_from_file_location(
+        config.name,
+        config.path
     )
 
-    with open(plugin_file, &#34;r&#34;) as input_file:
+    if spec:
+        config.module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(config.module)
+
+        return config
+
+    raise Exception(&#34;{} is not a valid python module&#34;.format(plugin))</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.io.assert_root_attribute"><code class="name flex">
+<span>def <span class="ident">assert_root_attribute</span></span>(<span>config: <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a>) ‑> <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method sets the root attribute on the config instance</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assert_root_attribute(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method sets the root attribute on the config instance
+    &#34;&#34;&#34;
+    config.root = getattr(config.module, config.root_name)
+
+    return config</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.io.assert_root_attribute_type"><code class="name flex">
+<span>def <span class="ident">assert_root_attribute_type</span></span>(<span>config: <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a>) ‑> <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method asserts that the root attribute
+is an instance of 'bootstrap.Description'</p>
+<h2 id="raises">Raises</h2>
+<p>Exception</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assert_root_attribute_type(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method asserts that the root attribute
+    is an instance of &#39;bootstrap.Description&#39;
+
+    Raises:
+        Exception
+    &#34;&#34;&#34;
+    if isinstance(config.root, bootstrap.Description):
+        return config
+
+    raise Exception((
+        &#34;plugin must define variable &#39;root&#39; &#34;,
+        &#34;of type &#39;bootstrap.Description&#39;&#34;
+    ))</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.io.build_plugin"><code class="name flex">
+<span>def <span class="ident">build_plugin</span></span>(<span>value)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def callback(value):
+    def reducer(a, b):
+        return a.map(b)
+
+    return reduce(reducer, [value] + items)</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.io.create_plugin"><code class="name flex">
+<span>def <span class="ident">create_plugin</span></span>(<span>value)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def callback(value):
+    def reducer(a, b):
+        return a.map(b)
+
+    return reduce(reducer, [value] + items)</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.io.write_header"><code class="name flex">
+<span>def <span class="ident">write_header</span></span>(<span>config: <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a>) ‑> <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method compiles the description to a header file</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_header(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method compiles the description to a header file
+    &#34;&#34;&#34;
+    destination_file = os.path.join(
+        config.destination,
+        &#34;res/description&#34;,
+        &#34;{}.h&#34;.format(config.name)
+    )
+
+    contents = render_header(reduce_header(config.root))
+
+    contents = &#34;\n&#34;.join([COMMENT_C + PREFIX, contents])
+
+    assert_directories(destination_file, True)
+
+    with open(destination_file, &#34;w&#34;) as f:
+        f.write(contents)
+
+    return config</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.io.write_locales"><code class="name flex">
+<span>def <span class="ident">write_locales</span></span>(<span>config: <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a>) ‑> <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method compiles the description to string files</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_locales(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method compiles the description to string files
+    &#34;&#34;&#34;
+    strings_rendered = render_strings(reduce_strings(config.root))
+
+    destination_files = []
+
+    for key, contents in strings_rendered.items():
+        destination_file = os.path.join(
+            config.destination,
+            &#34;res&#34;,
+            key,
+            &#34;description&#34;,
+            &#34;{}.str&#34;.format(config.name)
+        )
+
+        contents = &#34;\n&#34;.join([COMMENT_C + PREFIX, contents])
+
+        assert_directories(destination_file, True)
+
+        with open(destination_file, &#34;w&#34;) as f:
+            f.write(contents)
+
+        destination_files.append(destination_file)
+
+    return config</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.io.write_plugin"><code class="name flex">
+<span>def <span class="ident">write_plugin</span></span>(<span>config: <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a>) ‑> <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method compiles the python plugin to a cinema 4d pyp file</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_plugin(config: Config) -&gt; Config:
+    &#34;&#34;&#34;
+    This method compiles the python plugin to a cinema 4d pyp file
+    &#34;&#34;&#34;
+    with open(config.path, &#34;r&#34;) as input_file:
         lines = input_file.read().split(&#34;\n&#34;)
 
         lines_computed = []
 
         ignore_lines = False
         id_section = False
-
-        module = load_source(plugin_filename, plugin_file)
 
         for line in lines:
             # id section
@@ -361,12 +655,12 @@ def build(description, plugin_file, destination_directory, filename):
                 variables = [x.strip() for x in line.split(&#34;=&#34;)]
 
                 if variables:
-                    variableName = variables[0]
+                    variable_name = variables[0]
 
                     lines_computed.append(
                         &#34;{} = {}&#34;.format(
-                            variableName,
-                            getattr(module, variableName)
+                            variable_name,
+                            getattr(config.module, variable_name)
                         )
                     )
 
@@ -387,7 +681,7 @@ def build(description, plugin_file, destination_directory, filename):
                 lines_computed.append(line)
 
         compiled_plugin_file = os.path.join(
-            destination_directory, &#34;{}.pyp&#34;.format(filename)
+            config.destination, &#34;{}.pyp&#34;.format(config.name)
         )
 
         assert_directories(compiled_plugin_file, True)
@@ -395,74 +689,29 @@ def build(description, plugin_file, destination_directory, filename):
         with open(compiled_plugin_file, &#34;w&#34;) as output_file:
             output_file.write(&#34;\n&#34;.join(lines_computed))
 
-        print(&#34;done writing {}&#34;.format(compiled_plugin_file))</code></pre>
-</details>
-</dd>
-<dt id="bootstrap.io.write_header"><code class="name flex">
-<span>def <span class="ident">write_header</span></span>(<span>description, destination_directory, filename)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>This method compiles the description to a header file.
-:param description: bootstrap.Description
-:param destination_directory: string
-:param filename: string
-:return:</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def write_header(description, destination_directory, filename):
-    &#34;&#34;&#34;
-    This method compiles the description to a header file.
-    :param description: bootstrap.Description
-    :param destination_directory: string
-    :param filename: string
-    :return:
-    &#34;&#34;&#34;
-    destination_file = os.path.join(
-        destination_directory, &#34;res/description&#34;,
-        &#34;{}.h&#34;.format(filename)
-    )
-
-    contents = render_header(reduce_header(description))
-
-    contents = &#34;\n&#34;.join([COMMENT_C + PREFIX, contents])
-
-    assert_directories(destination_file, True)
-
-    with open(destination_file, &#34;w&#34;) as f:
-        f.write(contents)
-
-    print(&#34;done writing {}&#34;.format(destination_file))</code></pre>
+    return config</code></pre>
 </details>
 </dd>
 <dt id="bootstrap.io.write_resource"><code class="name flex">
-<span>def <span class="ident">write_resource</span></span>(<span>description, destination_directory, filename)</span>
+<span>def <span class="ident">write_resource</span></span>(<span>config: <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a>) ‑> <a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method compiles the description to a resource file.
-:param description: bootstrap.Description
-:param destination_directory: string
-:param filename: string
-:return:</p></div>
+<div class="desc"><p>This method compiles the description to a resource file</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def write_resource(description, destination_directory, filename):
+<pre><code class="python">def write_resource(config: Config) -&gt; Config:
     &#34;&#34;&#34;
-    This method compiles the description to a resource file.
-    :param description: bootstrap.Description
-    :param destination_directory: string
-    :param filename: string
-    :return:
+    This method compiles the description to a resource file
     &#34;&#34;&#34;
     destination_file = os.path.join(
-        destination_directory, &#34;res/description&#34;,
-        &#34;{}.res&#34;.format(filename)
+        config.destination,
+        &#34;res/description&#34;,
+        &#34;{}.res&#34;.format(config.name)
     )
 
-    contents = render_resource(reduce_resource(description))
+    contents = render_resource(reduce_resource(config.root))
 
     contents = &#34;\n&#34;.join([COMMENT_C + PREFIX, contents])
 
@@ -471,51 +720,41 @@ def build(description, plugin_file, destination_directory, filename):
     with open(destination_file, &#34;w&#34;) as f:
         f.write(contents)
 
-    print(&#34;done writing {}&#34;.format(destination_file))</code></pre>
-</details>
-</dd>
-<dt id="bootstrap.io.write_strings"><code class="name flex">
-<span>def <span class="ident">write_strings</span></span>(<span>description, destination_directory, filename)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>This method compiles the description to string files.
-:param description: bootstrap.Description
-:param destination_directory: string
-:param filename: string
-:return:</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def write_strings(description, destination_directory, filename):
-    &#34;&#34;&#34;
-    This method compiles the description to string files.
-    :param description: bootstrap.Description
-    :param destination_directory: string
-    :param filename: string
-    :return:
-    &#34;&#34;&#34;
-    strings_rendered = render_strings(reduce_strings(description))
-
-    for key, contents in strings_rendered.items():
-        destination_file = os.path.join(
-            destination_directory, &#34;res&#34;, key, &#34;description&#34;,
-            &#34;{}.str&#34;.format(filename)
-        )
-
-        contents = &#34;\n&#34;.join([COMMENT_C + PREFIX, contents])
-
-        assert_directories(destination_file, True)
-
-        with open(destination_file, &#34;w&#34;) as f:
-            f.write(contents)
-
-        print(&#34;done writing {}&#34;.format(destination_file))</code></pre>
+    return config</code></pre>
 </details>
 </dd>
 </dl>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="bootstrap.io.Config"><code class="flex name class">
+<span>class <span class="ident">Config</span></span>
+<span>(</span><span>path, name, destination, root_name, root, module)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This class represents a container of variables
+that are used to create the plugin</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Config(object):
+    &#34;&#34;&#34;
+    This class represents a container of variables
+    that are used to create the plugin
+    &#34;&#34;&#34;
+
+    def __init__(self, path, name, destination, root_name, root, module):
+        self.path = path
+        self.name = name
+        self.destination = destination
+        self.root_name = root_name
+        self.root = root
+        self.module = module</code></pre>
+</details>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -538,11 +777,25 @@ def build(description, plugin_file, destination_directory, filename):
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="bootstrap.io.build" href="#bootstrap.io.build">build</a></code></li>
-<li><code><a title="bootstrap.io.compile_plugin" href="#bootstrap.io.compile_plugin">compile_plugin</a></code></li>
+<li><code><a title="bootstrap.io.assert_destination" href="#bootstrap.io.assert_destination">assert_destination</a></code></li>
+<li><code><a title="bootstrap.io.assert_plugin_config" href="#bootstrap.io.assert_plugin_config">assert_plugin_config</a></code></li>
+<li><code><a title="bootstrap.io.assert_plugin_path" href="#bootstrap.io.assert_plugin_path">assert_plugin_path</a></code></li>
+<li><code><a title="bootstrap.io.assert_python_module" href="#bootstrap.io.assert_python_module">assert_python_module</a></code></li>
+<li><code><a title="bootstrap.io.assert_root_attribute" href="#bootstrap.io.assert_root_attribute">assert_root_attribute</a></code></li>
+<li><code><a title="bootstrap.io.assert_root_attribute_type" href="#bootstrap.io.assert_root_attribute_type">assert_root_attribute_type</a></code></li>
+<li><code><a title="bootstrap.io.build_plugin" href="#bootstrap.io.build_plugin">build_plugin</a></code></li>
+<li><code><a title="bootstrap.io.create_plugin" href="#bootstrap.io.create_plugin">create_plugin</a></code></li>
 <li><code><a title="bootstrap.io.write_header" href="#bootstrap.io.write_header">write_header</a></code></li>
+<li><code><a title="bootstrap.io.write_locales" href="#bootstrap.io.write_locales">write_locales</a></code></li>
+<li><code><a title="bootstrap.io.write_plugin" href="#bootstrap.io.write_plugin">write_plugin</a></code></li>
 <li><code><a title="bootstrap.io.write_resource" href="#bootstrap.io.write_resource">write_resource</a></code></li>
-<li><code><a title="bootstrap.io.write_strings" href="#bootstrap.io.write_strings">write_strings</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="bootstrap.io.Config" href="#bootstrap.io.Config">Config</a></code></h4>
+</li>
 </ul>
 </li>
 </ul>

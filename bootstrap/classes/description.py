@@ -2,8 +2,6 @@
 This module provides generic Description classes and sugared classes
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 import hashlib
 
 
@@ -18,11 +16,12 @@ class Description(object):
     This class models a generic description
     """
 
-    def __init__(self, config):
+    def __init__(
+        self,
+        config: dict
+    ) -> None:
         """
-        This method initializes a new instance of the Description class.
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Description class
         """
         default_config = {
             "id": None,
@@ -33,12 +32,13 @@ class Description(object):
 
         self.config = {**default_config, **config}
 
-    def __getattr__(self, name):
+    def __getattr__(
+        self,
+        name: str
+    ) -> any:
         """
         This method implements __getattr__ for looking up
-        attributes from config dictionary.
-        :param name: string
-        :return: mixed
+        attributes from config dictionary
         """
         if name in self.config.keys():
             return self.config[name]
@@ -47,11 +47,10 @@ class Description(object):
             "type object 'Description' has no attribute '{}'".format(name)
         )
 
-    def GetId(self):
+    def GetId(self) -> int:
         """
         This method implements the hashing of the id attribute
-        as an integer.
-        :return: integer
+        as an integer
         """
         if not self.id:
             raise IdError("No id has been assigned")
@@ -66,12 +65,14 @@ class Assignment(Description):
     This class provides sugar for an Assignment type Description
     """
 
-    def __init__(self, key=None, value=None, config=None):
+    def __init__(
+        self,
+        key: str = None,
+        value: any = None,
+        config: dict = None
+    ) -> None:
         """
-        This method initializes a new instance of the Assignment class.
-        :param key: string
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Assignment class
         """
         if config is None:
             config = {}
@@ -90,12 +91,13 @@ class Group(Description):
     This class provides sugar for a Group type Description
     """
 
-    def __init__(self, description_id, config=None):
+    def __init__(
+        self,
+        description_id: str,
+        config: dict = None
+    ) -> None:
         """
-        This method initializes a new instance of the Group class.
-        :param description_id: string
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Group class
         """
         if config is None:
             config = {}
@@ -114,12 +116,13 @@ class Container(Description):
     This class provides sugar for a Container type Description
     """
 
-    def __init__(self, description_id, config=None):
+    def __init__(
+        self,
+        description_id: str,
+        config: dict = None
+    ) -> None:
         """
-        This method initializes a new instance of the Container class.
-        :param description_id: string
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Container class
         """
         if config is None:
             config = {}

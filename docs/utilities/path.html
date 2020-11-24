@@ -31,18 +31,16 @@
 This module provides methods for working with the filesystem
 &#34;&#34;&#34;
 
-__author__ = &#34;Bernhard Esperester &lt;bernhard@esperester.de&gt;&#34;
-
 from os import makedirs
 from os.path import isdir, dirname
 
 
-def assert_directories(path, is_file_path=False):
+def assert_directories(
+    path: str,
+    is_file_path: bool = False
+) -&gt; None:
     &#34;&#34;&#34;
-    This method asserts the existence of all directories in the path.
-    :param path: string
-    :param is_file_path: boolean
-    :return:
+    This method asserts the existence of all directories in the path
     &#34;&#34;&#34;
     directory_path = path
 
@@ -61,23 +59,20 @@ def assert_directories(path, is_file_path=False):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="bootstrap.utilities.path.assert_directories"><code class="name flex">
-<span>def <span class="ident">assert_directories</span></span>(<span>path, is_file_path=False)</span>
+<span>def <span class="ident">assert_directories</span></span>(<span>path: str, is_file_path: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method asserts the existence of all directories in the path.
-:param path: string
-:param is_file_path: boolean
-:return:</p></div>
+<div class="desc"><p>This method asserts the existence of all directories in the path</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def assert_directories(path, is_file_path=False):
+<pre><code class="python">def assert_directories(
+    path: str,
+    is_file_path: bool = False
+) -&gt; None:
     &#34;&#34;&#34;
-    This method asserts the existence of all directories in the path.
-    :param path: string
-    :param is_file_path: boolean
-    :return:
+    This method asserts the existence of all directories in the path
     &#34;&#34;&#34;
     directory_path = path
 

@@ -2,8 +2,6 @@
 This module provides methods for rendering headers
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 from bootstrap.classes.template import Template
 
 header_container = Template(
@@ -15,8 +13,7 @@ enum
     {value}
 }};
 
-#endif
-"""
+#endif"""
 )
 """
 Template for rendering header container
@@ -28,11 +25,9 @@ Template for rendering variable assignment
 """
 
 
-def render_header(header_reduced):
+def render_header(header_reduced: dict) -> str:
     """
-    This method applies template rendering to the provided input.
-    :param header_reduced: dict
-    :return: string
+    This method applies template rendering to the provided input
     """
     data = {
         "value": [header_assignment.Render(x) for x in header_reduced]

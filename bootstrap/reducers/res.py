@@ -2,14 +2,12 @@
 This module provides methods for reducing Description to resource
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
+import bootstrap
 
 
-def reduce_resource(description):
+def reduce_resource(description: bootstrap.Description) -> dict:
     """
-    This method reduces Description instance to nested resource dictionary.
-    :param description: bootstrap.Description
-    :return: dict
+    This method reduces Description instance to nested resource dictionary
     """
     data = {
         "id": description.id,

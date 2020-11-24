@@ -2,16 +2,13 @@
 This module provides methods for reducing Description to headers
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
+import bootstrap
 from bootstrap.classes.description import IdError
 
 
-def reduce_header(description):
+def reduce_header(description: bootstrap.Description) -> dict:
     """
-    This method reduces Description instance to nested header dictionary.
-    :param description: bootstrap.Description
-    :return: dict
+    This method reduces Description instance to nested header dictionary
     """
     data = []
 

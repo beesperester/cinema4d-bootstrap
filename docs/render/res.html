@@ -31,8 +31,6 @@
 This module provides methods for rendering resources
 &#34;&#34;&#34;
 
-__author__ = &#34;Bernhard Esperester &lt;bernhard@esperester.de&gt;&#34;
-
 from bootstrap.classes.template import Template
 
 resource_container = Template(
@@ -51,11 +49,9 @@ Template for rendering variable assignment
 &#34;&#34;&#34;
 
 
-def render_resource(resource_reduced):
+def render_resource(resource_reduced: dict) -&gt; str:
     &#34;&#34;&#34;
-    This method applies template rendering to the provided input.
-    :param resource_reduced: dict
-    :return: string
+    This method applies template rendering to the provided input
     &#34;&#34;&#34;
     data = {**resource_reduced}
 
@@ -86,21 +82,17 @@ def render_resource(resource_reduced):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="bootstrap.render.res.render_resource"><code class="name flex">
-<span>def <span class="ident">render_resource</span></span>(<span>resource_reduced)</span>
+<span>def <span class="ident">render_resource</span></span>(<span>resource_reduced: dict) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method applies template rendering to the provided input.
-:param resource_reduced: dict
-:return: string</p></div>
+<div class="desc"><p>This method applies template rendering to the provided input</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def render_resource(resource_reduced):
+<pre><code class="python">def render_resource(resource_reduced: dict) -&gt; str:
     &#34;&#34;&#34;
-    This method applies template rendering to the provided input.
-    :param resource_reduced: dict
-    :return: string
+    This method applies template rendering to the provided input
     &#34;&#34;&#34;
     data = {**resource_reduced}
 

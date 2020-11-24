@@ -2,8 +2,6 @@
 This module provides generic Template class
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 import re
 
 
@@ -12,20 +10,22 @@ class Template(object):
     This class models a generic Template
     """
 
-    def __init__(self, template_string):
+    def __init__(
+        self,
+        template_string: str
+    ) -> None:
         """
-        This method initializes a new instance of the Template class.
-        :param template_string: string
-        :return:
+        This method initializes a new instance of the Template class
         """
         self.template_string = template_string
 
     @classmethod
-    def PrepareData(cls, data):
+    def PrepareData(
+        cls,
+        data: dict
+    ) -> None:
         """
-        This method implements.
-        :param name: string
-        :return: mixed
+        This method prepares data for rendering
         """
         dataPrepared = data.copy()
 
@@ -35,14 +35,12 @@ class Template(object):
 
         return dataPrepared
 
-    def Render(self, data=None):
-        """Render the template with the provided data.
-
-        Args:
-            data:   dict
-
-        Returns:
-            string
+    def Render(
+        self,
+        data: dict
+    ) -> str:
+        """
+        Render the template with the provided data
         """
         if data is None:
             data = {}
@@ -58,6 +56,8 @@ class Template(object):
             for group in groups:
                 if group not in data.keys() or data[group] is None:
                     line = line.replace("{{{}}}".format(group), "")
+                    # greedy replace whitespace
+                    line = re.sub(r"\s+", " ", line)
 
                     line = line.strip()
 

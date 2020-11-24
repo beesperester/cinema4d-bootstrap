@@ -31,8 +31,6 @@
 This module provides generic Description classes and sugared classes
 &#34;&#34;&#34;
 
-__author__ = &#34;Bernhard Esperester &lt;bernhard@esperester.de&gt;&#34;
-
 import hashlib
 
 
@@ -47,11 +45,12 @@ class Description(object):
     This class models a generic description
     &#34;&#34;&#34;
 
-    def __init__(self, config):
+    def __init__(
+        self,
+        config: dict
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Description class.
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Description class
         &#34;&#34;&#34;
         default_config = {
             &#34;id&#34;: None,
@@ -62,12 +61,13 @@ class Description(object):
 
         self.config = {**default_config, **config}
 
-    def __getattr__(self, name):
+    def __getattr__(
+        self,
+        name: str
+    ) -&gt; any:
         &#34;&#34;&#34;
         This method implements __getattr__ for looking up
-        attributes from config dictionary.
-        :param name: string
-        :return: mixed
+        attributes from config dictionary
         &#34;&#34;&#34;
         if name in self.config.keys():
             return self.config[name]
@@ -76,11 +76,10 @@ class Description(object):
             &#34;type object &#39;Description&#39; has no attribute &#39;{}&#39;&#34;.format(name)
         )
 
-    def GetId(self):
+    def GetId(self) -&gt; int:
         &#34;&#34;&#34;
         This method implements the hashing of the id attribute
-        as an integer.
-        :return: integer
+        as an integer
         &#34;&#34;&#34;
         if not self.id:
             raise IdError(&#34;No id has been assigned&#34;)
@@ -95,12 +94,14 @@ class Assignment(Description):
     This class provides sugar for an Assignment type Description
     &#34;&#34;&#34;
 
-    def __init__(self, key=None, value=None, config=None):
+    def __init__(
+        self,
+        key: str = None,
+        value: any = None,
+        config: dict = None
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Assignment class.
-        :param key: string
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Assignment class
         &#34;&#34;&#34;
         if config is None:
             config = {}
@@ -119,12 +120,13 @@ class Group(Description):
     This class provides sugar for a Group type Description
     &#34;&#34;&#34;
 
-    def __init__(self, description_id, config=None):
+    def __init__(
+        self,
+        description_id: str,
+        config: dict = None
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Group class.
-        :param description_id: string
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Group class
         &#34;&#34;&#34;
         if config is None:
             config = {}
@@ -143,12 +145,13 @@ class Container(Description):
     This class provides sugar for a Container type Description
     &#34;&#34;&#34;
 
-    def __init__(self, description_id, config=None):
+    def __init__(
+        self,
+        description_id: str,
+        config: dict = None
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Container class.
-        :param description_id: string
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Container class
         &#34;&#34;&#34;
         if config is None:
             config = {}
@@ -173,14 +176,11 @@ class Container(Description):
 <dl>
 <dt id="bootstrap.classes.description.Assignment"><code class="flex name class">
 <span>class <span class="ident">Assignment</span></span>
-<span>(</span><span>key=None, value=None, config=None)</span>
+<span>(</span><span>key: str = None, value: <built-in function any> = None, config: dict = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This class provides sugar for an Assignment type Description</p>
-<p>This method initializes a new instance of the Assignment class.
-:param key: string
-:param config: dict
-:return:</p></div>
+<p>This method initializes a new instance of the Assignment class</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -190,12 +190,14 @@ class Container(Description):
     This class provides sugar for an Assignment type Description
     &#34;&#34;&#34;
 
-    def __init__(self, key=None, value=None, config=None):
+    def __init__(
+        self,
+        key: str = None,
+        value: any = None,
+        config: dict = None
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Assignment class.
-        :param key: string
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Assignment class
         &#34;&#34;&#34;
         if config is None:
             config = {}
@@ -223,14 +225,11 @@ class Container(Description):
 </dd>
 <dt id="bootstrap.classes.description.Container"><code class="flex name class">
 <span>class <span class="ident">Container</span></span>
-<span>(</span><span>description_id, config=None)</span>
+<span>(</span><span>description_id: str, config: dict = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This class provides sugar for a Container type Description</p>
-<p>This method initializes a new instance of the Container class.
-:param description_id: string
-:param config: dict
-:return:</p></div>
+<p>This method initializes a new instance of the Container class</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -240,12 +239,13 @@ class Container(Description):
     This class provides sugar for a Container type Description
     &#34;&#34;&#34;
 
-    def __init__(self, description_id, config=None):
+    def __init__(
+        self,
+        description_id: str,
+        config: dict = None
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Container class.
-        :param description_id: string
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Container class
         &#34;&#34;&#34;
         if config is None:
             config = {}
@@ -273,13 +273,11 @@ class Container(Description):
 </dd>
 <dt id="bootstrap.classes.description.Description"><code class="flex name class">
 <span>class <span class="ident">Description</span></span>
-<span>(</span><span>config)</span>
+<span>(</span><span>config: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This class models a generic description</p>
-<p>This method initializes a new instance of the Description class.
-:param config: dict
-:return:</p></div>
+<p>This method initializes a new instance of the Description class</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -289,11 +287,12 @@ class Container(Description):
     This class models a generic description
     &#34;&#34;&#34;
 
-    def __init__(self, config):
+    def __init__(
+        self,
+        config: dict
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Description class.
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Description class
         &#34;&#34;&#34;
         default_config = {
             &#34;id&#34;: None,
@@ -304,12 +303,13 @@ class Container(Description):
 
         self.config = {**default_config, **config}
 
-    def __getattr__(self, name):
+    def __getattr__(
+        self,
+        name: str
+    ) -&gt; any:
         &#34;&#34;&#34;
         This method implements __getattr__ for looking up
-        attributes from config dictionary.
-        :param name: string
-        :return: mixed
+        attributes from config dictionary
         &#34;&#34;&#34;
         if name in self.config.keys():
             return self.config[name]
@@ -318,11 +318,10 @@ class Container(Description):
             &#34;type object &#39;Description&#39; has no attribute &#39;{}&#39;&#34;.format(name)
         )
 
-    def GetId(self):
+    def GetId(self) -&gt; int:
         &#34;&#34;&#34;
         This method implements the hashing of the id attribute
-        as an integer.
-        :return: integer
+        as an integer
         &#34;&#34;&#34;
         if not self.id:
             raise IdError(&#34;No id has been assigned&#34;)
@@ -340,21 +339,19 @@ class Container(Description):
 <h3>Methods</h3>
 <dl>
 <dt id="bootstrap.classes.description.Description.GetId"><code class="name flex">
-<span>def <span class="ident">GetId</span></span>(<span>self)</span>
+<span>def <span class="ident">GetId</span></span>(<span>self) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This method implements the hashing of the id attribute
-as an integer.
-:return: integer</p></div>
+as an integer</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def GetId(self):
+<pre><code class="python">def GetId(self) -&gt; int:
     &#34;&#34;&#34;
     This method implements the hashing of the id attribute
-    as an integer.
-    :return: integer
+    as an integer
     &#34;&#34;&#34;
     if not self.id:
         raise IdError(&#34;No id has been assigned&#34;)
@@ -368,14 +365,11 @@ as an integer.
 </dd>
 <dt id="bootstrap.classes.description.Group"><code class="flex name class">
 <span>class <span class="ident">Group</span></span>
-<span>(</span><span>description_id, config=None)</span>
+<span>(</span><span>description_id: str, config: dict = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This class provides sugar for a Group type Description</p>
-<p>This method initializes a new instance of the Group class.
-:param description_id: string
-:param config: dict
-:return:</p></div>
+<p>This method initializes a new instance of the Group class</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -385,12 +379,13 @@ as an integer.
     This class provides sugar for a Group type Description
     &#34;&#34;&#34;
 
-    def __init__(self, description_id, config=None):
+    def __init__(
+        self,
+        description_id: str,
+        config: dict = None
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Group class.
-        :param description_id: string
-        :param config: dict
-        :return:
+        This method initializes a new instance of the Group class
         &#34;&#34;&#34;
         if config is None:
             config = {}

@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
-<title>bootstrap.reducers.h API documentation</title>
-<meta name="description" content="This module provides methods for reducing Description to headers" />
+<title>bootstrap.utilities.cli API documentation</title>
+<meta name="description" content="This module provides methods for working with the cli" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,41 +19,41 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>bootstrap.reducers.h</code></h1>
+<h1 class="title">Module <code>bootstrap.utilities.cli</code></h1>
 </header>
 <section id="section-intro">
-<p>This module provides methods for reducing Description to headers</p>
+<p>This module provides methods for working with the cli</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-This module provides methods for reducing Description to headers
+This module provides methods for working with the cli
 &#34;&#34;&#34;
 
-import bootstrap
-from bootstrap.classes.description import IdError
+import colorama
 
 
-def reduce_header(description: bootstrap.Description) -&gt; dict:
+def cli_format_error(message: str) -&gt; str:
     &#34;&#34;&#34;
-    This method reduces Description instance to nested header dictionary
+    This method takes an error message and formats it with a red
+    colored &#34;Error:&#34; prefix for displaying it in the console
     &#34;&#34;&#34;
-    data = []
+    return &#34;{} {}&#34;.format(
+        colorama.Fore.RED + &#34;Error:&#34; + colorama.Style.RESET_ALL,
+        message
+    )
 
-    try:
-        data.append({
-            &#34;key&#34;: description.id,
-            &#34;value&#34;: description.GetId()
-        })
-    except IdError:
-        pass
 
-    if isinstance(description.value, list):
-        for item in description.value:
-            data = data + list(filter(None, reduce_header(item)))
-
-    return data</code></pre>
+def cli_format_success(message: str) -&gt; str:
+    &#34;&#34;&#34;
+    This method takes a success message and formats it with a green
+    colored &#34;Success:&#34; prefix for displaying it in the console
+    &#34;&#34;&#34;
+    return &#34;{} {}&#34;.format(
+        colorama.Fore.GREEN + &#34;Success:&#34; + colorama.Style.RESET_ALL,
+        message
+    )</code></pre>
 </details>
 </section>
 <section>
@@ -63,34 +63,46 @@ def reduce_header(description: bootstrap.Description) -&gt; dict:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="bootstrap.reducers.h.reduce_header"><code class="name flex">
-<span>def <span class="ident">reduce_header</span></span>(<span>description: <a title="bootstrap.classes.description.Description" href="../classes/description.html#bootstrap.classes.description.Description">Description</a>) ‑> dict</span>
+<dt id="bootstrap.utilities.cli.cli_format_error"><code class="name flex">
+<span>def <span class="ident">cli_format_error</span></span>(<span>message: str) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method reduces Description instance to nested header dictionary</p></div>
+<div class="desc"><p>This method takes an error message and formats it with a red
+colored "Error:" prefix for displaying it in the console</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def reduce_header(description: bootstrap.Description) -&gt; dict:
+<pre><code class="python">def cli_format_error(message: str) -&gt; str:
     &#34;&#34;&#34;
-    This method reduces Description instance to nested header dictionary
+    This method takes an error message and formats it with a red
+    colored &#34;Error:&#34; prefix for displaying it in the console
     &#34;&#34;&#34;
-    data = []
-
-    try:
-        data.append({
-            &#34;key&#34;: description.id,
-            &#34;value&#34;: description.GetId()
-        })
-    except IdError:
-        pass
-
-    if isinstance(description.value, list):
-        for item in description.value:
-            data = data + list(filter(None, reduce_header(item)))
-
-    return data</code></pre>
+    return &#34;{} {}&#34;.format(
+        colorama.Fore.RED + &#34;Error:&#34; + colorama.Style.RESET_ALL,
+        message
+    )</code></pre>
+</details>
+</dd>
+<dt id="bootstrap.utilities.cli.cli_format_success"><code class="name flex">
+<span>def <span class="ident">cli_format_success</span></span>(<span>message: str) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method takes a success message and formats it with a green
+colored "Success:" prefix for displaying it in the console</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cli_format_success(message: str) -&gt; str:
+    &#34;&#34;&#34;
+    This method takes a success message and formats it with a green
+    colored &#34;Success:&#34; prefix for displaying it in the console
+    &#34;&#34;&#34;
+    return &#34;{} {}&#34;.format(
+        colorama.Fore.GREEN + &#34;Success:&#34; + colorama.Style.RESET_ALL,
+        message
+    )</code></pre>
 </details>
 </dd>
 </dl>
@@ -106,12 +118,13 @@ def reduce_header(description: bootstrap.Description) -&gt; dict:
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="bootstrap.reducers" href="index.html">bootstrap.reducers</a></code></li>
+<li><code><a title="bootstrap.utilities" href="index.html">bootstrap.utilities</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="bootstrap.reducers.h.reduce_header" href="#bootstrap.reducers.h.reduce_header">reduce_header</a></code></li>
+<li><code><a title="bootstrap.utilities.cli.cli_format_error" href="#bootstrap.utilities.cli.cli_format_error">cli_format_error</a></code></li>
+<li><code><a title="bootstrap.utilities.cli.cli_format_success" href="#bootstrap.utilities.cli.cli_format_success">cli_format_success</a></code></li>
 </ul>
 </li>
 </ul>

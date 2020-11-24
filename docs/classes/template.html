@@ -31,8 +31,6 @@
 This module provides generic Template class
 &#34;&#34;&#34;
 
-__author__ = &#34;Bernhard Esperester &lt;bernhard@esperester.de&gt;&#34;
-
 import re
 
 
@@ -41,20 +39,22 @@ class Template(object):
     This class models a generic Template
     &#34;&#34;&#34;
 
-    def __init__(self, template_string):
+    def __init__(
+        self,
+        template_string: str
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Template class.
-        :param template_string: string
-        :return:
+        This method initializes a new instance of the Template class
         &#34;&#34;&#34;
         self.template_string = template_string
 
     @classmethod
-    def PrepareData(cls, data):
+    def PrepareData(
+        cls,
+        data: dict
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method implements.
-        :param name: string
-        :return: mixed
+        This method prepares data for rendering
         &#34;&#34;&#34;
         dataPrepared = data.copy()
 
@@ -64,14 +64,12 @@ class Template(object):
 
         return dataPrepared
 
-    def Render(self, data=None):
-        &#34;&#34;&#34;Render the template with the provided data.
-
-        Args:
-            data:   dict
-
-        Returns:
-            string
+    def Render(
+        self,
+        data: dict
+    ) -&gt; str:
+        &#34;&#34;&#34;
+        Render the template with the provided data
         &#34;&#34;&#34;
         if data is None:
             data = {}
@@ -87,6 +85,8 @@ class Template(object):
             for group in groups:
                 if group not in data.keys() or data[group] is None:
                     line = line.replace(&#34;{{{}}}&#34;.format(group), &#34;&#34;)
+                    # greedy replace whitespace
+                    line = re.sub(r&#34;\s+&#34;, &#34; &#34;, line)
 
                     line = line.strip()
 
@@ -120,13 +120,11 @@ class Template(object):
 <dl>
 <dt id="bootstrap.classes.template.Template"><code class="flex name class">
 <span>class <span class="ident">Template</span></span>
-<span>(</span><span>template_string)</span>
+<span>(</span><span>template_string: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This class models a generic Template</p>
-<p>This method initializes a new instance of the Template class.
-:param template_string: string
-:return:</p></div>
+<p>This method initializes a new instance of the Template class</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -136,20 +134,22 @@ class Template(object):
     This class models a generic Template
     &#34;&#34;&#34;
 
-    def __init__(self, template_string):
+    def __init__(
+        self,
+        template_string: str
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method initializes a new instance of the Template class.
-        :param template_string: string
-        :return:
+        This method initializes a new instance of the Template class
         &#34;&#34;&#34;
         self.template_string = template_string
 
     @classmethod
-    def PrepareData(cls, data):
+    def PrepareData(
+        cls,
+        data: dict
+    ) -&gt; None:
         &#34;&#34;&#34;
-        This method implements.
-        :param name: string
-        :return: mixed
+        This method prepares data for rendering
         &#34;&#34;&#34;
         dataPrepared = data.copy()
 
@@ -159,14 +159,12 @@ class Template(object):
 
         return dataPrepared
 
-    def Render(self, data=None):
-        &#34;&#34;&#34;Render the template with the provided data.
-
-        Args:
-            data:   dict
-
-        Returns:
-            string
+    def Render(
+        self,
+        data: dict
+    ) -&gt; str:
+        &#34;&#34;&#34;
+        Render the template with the provided data
         &#34;&#34;&#34;
         if data is None:
             data = {}
@@ -182,6 +180,8 @@ class Template(object):
             for group in groups:
                 if group not in data.keys() or data[group] is None:
                     line = line.replace(&#34;{{{}}}&#34;.format(group), &#34;&#34;)
+                    # greedy replace whitespace
+                    line = re.sub(r&#34;\s+&#34;, &#34; &#34;, line)
 
                     line = line.strip()
 
@@ -206,22 +206,21 @@ class Template(object):
 <h3>Static methods</h3>
 <dl>
 <dt id="bootstrap.classes.template.Template.PrepareData"><code class="name flex">
-<span>def <span class="ident">PrepareData</span></span>(<span>data)</span>
+<span>def <span class="ident">PrepareData</span></span>(<span>data: dict) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method implements.
-:param name: string
-:return: mixed</p></div>
+<div class="desc"><p>This method prepares data for rendering</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@classmethod
-def PrepareData(cls, data):
+def PrepareData(
+    cls,
+    data: dict
+) -&gt; None:
     &#34;&#34;&#34;
-    This method implements.
-    :param name: string
-    :return: mixed
+    This method prepares data for rendering
     &#34;&#34;&#34;
     dataPrepared = data.copy()
 
@@ -236,29 +235,20 @@ def PrepareData(cls, data):
 <h3>Methods</h3>
 <dl>
 <dt id="bootstrap.classes.template.Template.Render"><code class="name flex">
-<span>def <span class="ident">Render</span></span>(<span>self, data=None)</span>
+<span>def <span class="ident">Render</span></span>(<span>self, data: dict) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Render the template with the provided data.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>data</code></strong></dt>
-<dd>dict</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>string</p></div>
+<div class="desc"><p>Render the template with the provided data</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def Render(self, data=None):
-    &#34;&#34;&#34;Render the template with the provided data.
-
-    Args:
-        data:   dict
-
-    Returns:
-        string
+<pre><code class="python">def Render(
+    self,
+    data: dict
+) -&gt; str:
+    &#34;&#34;&#34;
+    Render the template with the provided data
     &#34;&#34;&#34;
     if data is None:
         data = {}
@@ -274,6 +264,8 @@ def PrepareData(cls, data):
         for group in groups:
             if group not in data.keys() or data[group] is None:
                 line = line.replace(&#34;{{{}}}&#34;.format(group), &#34;&#34;)
+                # greedy replace whitespace
+                line = re.sub(r&#34;\s+&#34;, &#34; &#34;, line)
 
                 line = line.strip()
 

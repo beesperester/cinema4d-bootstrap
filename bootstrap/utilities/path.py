@@ -2,18 +2,16 @@
 This module provides methods for working with the filesystem
 """
 
-__author__ = "Bernhard Esperester <bernhard@esperester.de>"
-
 from os import makedirs
 from os.path import isdir, dirname
 
 
-def assert_directories(path, is_file_path=False):
+def assert_directories(
+    path: str,
+    is_file_path: bool = False
+) -> None:
     """
-    This method asserts the existence of all directories in the path.
-    :param path: string
-    :param is_file_path: boolean
-    :return:
+    This method asserts the existence of all directories in the path
     """
     directory_path = path
 
