@@ -9,14 +9,12 @@ import bootstrap
 import colorama
 import os
 
-from bootstrap.io import Config, \
-    assert_plugin_config, \
-    create_plugin
+from bootstrap.io import Config, build_plugin
 from bootstrap.utilities.path import assert_directories
 from bootstrap.utilities.cli import \
     cli_format_error, \
     cli_format_success
-from bootstrap.classes.fp import Left, Right, pipe, chain
+from bootstrap.classes.fp import Left, Right
 
 
 def cli_module_build(args: argparse.Namespace) -> None:
@@ -45,10 +43,7 @@ def cli_module_build(args: argparse.Namespace) -> None:
         None,
         None)
 
-    return pipe([
-        chain(assert_plugin_config),
-        chain(create_plugin)
-    ])(Right(config))
+    return build_plugin(Right(config))
 
 
 def main() -> None:
@@ -108,13 +103,17 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    print(args)
-
     if args.module == "build":
         result = cli_module_build(args)
 
         if isinstance(result, Left):
             print(cli_format_error(result.value))
+        else:
+            config = result.value
+
+            message = "build plugin {}".format(config.path)
+
+            print(cli_format_success(message))
 
 
 if __name__ == "__main__":

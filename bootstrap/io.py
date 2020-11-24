@@ -12,7 +12,7 @@ from collections import namedtuple
 from imp import load_source
 
 import bootstrap
-from bootstrap.classes.fp import Either, Left, Right, pipe, encase
+from bootstrap.classes.fp import Either, Left, Right, pipe, encase, chain
 
 from bootstrap.reducers.res import reduce_resource
 from bootstrap.reducers.h import reduce_header
@@ -43,6 +43,10 @@ Prefix to prepend to compiled files
 
 
 class Config(object):
+    """
+    This class represents a container of variables
+    that are used to create the plugin
+    """
 
     def __init__(self, path, name, destination, root_name, root, module):
         self.path = path
@@ -55,7 +59,7 @@ class Config(object):
 
 def write_resource(config: Config) -> Config:
     """
-    This method compiles the description to a resource file.
+    This method compiles the description to a resource file
     """
     destination_file = os.path.join(
         config.destination,
@@ -77,7 +81,7 @@ def write_resource(config: Config) -> Config:
 
 def write_header(config: Config) -> Config:
     """
-    This method compiles the description to a header file.
+    This method compiles the description to a header file
     """
     destination_file = os.path.join(
         config.destination,
@@ -99,7 +103,7 @@ def write_header(config: Config) -> Config:
 
 def write_locales(config: Config) -> Config:
     """
-    This method compiles the description to string files.
+    This method compiles the description to string files
     """
     strings_rendered = render_strings(reduce_strings(config.root))
 
@@ -128,7 +132,7 @@ def write_locales(config: Config) -> Config:
 
 def write_plugin(config: Config) -> Config:
     """
-    This method compiles the python plugin to a cinema 4d pyp file.
+    This method compiles the python plugin to a cinema 4d pyp file
     """
     with open(config.path, "r") as input_file:
         lines = input_file.read().split("\n")
@@ -196,10 +200,17 @@ def write_plugin(config: Config) -> Config:
         with open(compiled_plugin_file, "w") as output_file:
             output_file.write("\n".join(lines_computed))
 
-        return config
+    return config
 
 
 def assert_plugin_path(config: Config) -> Config:
+    """
+    This method asserts the existence of the python plugin
+    on the filesystem
+
+    Raises:
+        Exception
+    """
     if (
         os.path.isfile(config.path) and
         config.path.endswith(".py")
@@ -212,6 +223,13 @@ def assert_plugin_path(config: Config) -> Config:
 
 
 def assert_python_module(config: Config) -> Config:
+    """
+    This method loads the provided python plugin as a module
+    and sets the module attribute on the config instance
+
+    Raises:
+        Exception
+    """
     spec = importlib.util.spec_from_file_location(
         config.name,
         config.path
@@ -227,12 +245,22 @@ def assert_python_module(config: Config) -> Config:
 
 
 def assert_root_attribute(config: Config) -> Config:
+    """
+    This method sets the root attribute on the config instance
+    """
     config.root = getattr(config.module, config.root_name)
 
     return config
 
 
 def assert_root_attribute_type(config: Config) -> Config:
+    """
+    This method asserts that the root attribute
+    is an instance of 'bootstrap.Description'
+
+    Raises:
+        Exception
+    """
     if isinstance(config.root, bootstrap.Description):
         return config
 
@@ -243,6 +271,9 @@ def assert_root_attribute_type(config: Config) -> Config:
 
 
 def assert_destination(config: Config) -> Config:
+    """
+    This method asserts the existence of the destination directory
+    """
     assert_directories(config.destination)
 
     return config
@@ -264,4 +295,11 @@ create_plugin = pipe([
     encase(write_header),
     encase(write_locales),
     encase(write_plugin)
+])
+
+
+# Right -> Either
+build_plugin = pipe([
+    chain(assert_plugin_config),
+    chain(create_plugin)
 ])
