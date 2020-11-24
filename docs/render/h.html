@@ -31,8 +31,6 @@
 This module provides methods for rendering headers
 &#34;&#34;&#34;
 
-__author__ = &#34;Bernhard Esperester &lt;bernhard@esperester.de&gt;&#34;
-
 from bootstrap.classes.template import Template
 
 header_container = Template(
@@ -44,8 +42,7 @@ enum
     {value}
 }};
 
-#endif
-&#34;&#34;&#34;
+#endif&#34;&#34;&#34;
 )
 &#34;&#34;&#34;
 Template for rendering header container
@@ -57,11 +54,9 @@ Template for rendering variable assignment
 &#34;&#34;&#34;
 
 
-def render_header(header_reduced):
+def render_header(header_reduced: dict) -&gt; str:
     &#34;&#34;&#34;
-    This method applies template rendering to the provided input.
-    :param header_reduced: dict
-    :return: string
+    This method applies template rendering to the provided input
     &#34;&#34;&#34;
     data = {
         &#34;value&#34;: [header_assignment.Render(x) for x in header_reduced]
@@ -89,21 +84,17 @@ def render_header(header_reduced):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="bootstrap.render.h.render_header"><code class="name flex">
-<span>def <span class="ident">render_header</span></span>(<span>header_reduced)</span>
+<span>def <span class="ident">render_header</span></span>(<span>header_reduced: dict) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method applies template rendering to the provided input.
-:param header_reduced: dict
-:return: string</p></div>
+<div class="desc"><p>This method applies template rendering to the provided input</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def render_header(header_reduced):
+<pre><code class="python">def render_header(header_reduced: dict) -&gt; str:
     &#34;&#34;&#34;
-    This method applies template rendering to the provided input.
-    :param header_reduced: dict
-    :return: string
+    This method applies template rendering to the provided input
     &#34;&#34;&#34;
     data = {
         &#34;value&#34;: [header_assignment.Render(x) for x in header_reduced]

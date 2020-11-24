@@ -31,14 +31,12 @@
 This module provides methods for reducing Description to resource
 &#34;&#34;&#34;
 
-__author__ = &#34;Bernhard Esperester &lt;bernhard@esperester.de&gt;&#34;
+import bootstrap
 
 
-def reduce_resource(description):
+def reduce_resource(description: bootstrap.Description) -&gt; dict:
     &#34;&#34;&#34;
-    This method reduces Description instance to nested resource dictionary.
-    :param description: bootstrap.Description
-    :return: dict
+    This method reduces Description instance to nested resource dictionary
     &#34;&#34;&#34;
     data = {
         &#34;id&#34;: description.id,
@@ -61,21 +59,17 @@ def reduce_resource(description):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="bootstrap.reducers.res.reduce_resource"><code class="name flex">
-<span>def <span class="ident">reduce_resource</span></span>(<span>description)</span>
+<span>def <span class="ident">reduce_resource</span></span>(<span>description: <a title="bootstrap.classes.description.Description" href="../classes/description.html#bootstrap.classes.description.Description">Description</a>) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method reduces Description instance to nested resource dictionary.
-:param description: bootstrap.Description
-:return: dict</p></div>
+<div class="desc"><p>This method reduces Description instance to nested resource dictionary</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def reduce_resource(description):
+<pre><code class="python">def reduce_resource(description: bootstrap.Description) -&gt; dict:
     &#34;&#34;&#34;
-    This method reduces Description instance to nested resource dictionary.
-    :param description: bootstrap.Description
-    :return: dict
+    This method reduces Description instance to nested resource dictionary
     &#34;&#34;&#34;
     data = {
         &#34;id&#34;: description.id,
