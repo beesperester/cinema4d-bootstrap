@@ -10,8 +10,7 @@ locales_container = Template(
     """STRINGTABLE {id}
 {{
     {value}
-}}
-"""
+}}"""
 )
 """
 Template for rendering locales container

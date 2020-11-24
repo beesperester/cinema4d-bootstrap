@@ -15,8 +15,7 @@ enum
     {value}
 }};
 
-#endif
-"""
+#endif"""
 )
 """
 Template for rendering header container
