@@ -1,6 +1,6 @@
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) ![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main)
 
-# cinema4d-bootstrap
+# bootstrap4c4d
 
 Simplify your Cinema 4D plugin development process by generating all the necessary c-headers, strings and resources automatically.
 
