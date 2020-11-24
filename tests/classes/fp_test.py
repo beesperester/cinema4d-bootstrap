@@ -2,7 +2,7 @@
 
 import unittest
 
-from bootstrap.classes import fp
+from bootstrap4c4d.classes import fp
 
 
 class TestFpMethods(unittest.TestCase):

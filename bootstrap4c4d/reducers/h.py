@@ -2,11 +2,11 @@
 This module provides methods for reducing Description to headers
 """
 
-import bootstrap
-from bootstrap.classes.description import IdError
+import bootstrap4c4d
+from bootstrap4c4d.classes.description import IdError
 
 
-def reduce_header(description: bootstrap.Description) -> dict:
+def reduce_header(description: bootstrap4c4d.Description) -> dict:
     """
     This method reduces Description instance to nested header dictionary
     """

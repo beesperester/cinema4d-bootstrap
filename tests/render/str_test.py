@@ -3,9 +3,9 @@
 import hashlib
 import unittest
 
-from bootstrap.classes.description import Description
-from bootstrap.reducers.str import reduce_strings
-from bootstrap.render.str import render_strings
+from bootstrap4c4d.classes.description import Description
+from bootstrap4c4d.reducers.str import reduce_strings
+from bootstrap4c4d.render.str import render_strings
 
 
 class TestStringsRender(unittest.TestCase):

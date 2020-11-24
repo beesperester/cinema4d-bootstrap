@@ -2,7 +2,7 @@
 
 import unittest
 
-from bootstrap.utilities.cli import cli_format_error, cli_format_success
+from bootstrap4c4d.utilities.cli import cli_format_error, cli_format_success
 
 
 class TestCliMethods(unittest.TestCase):

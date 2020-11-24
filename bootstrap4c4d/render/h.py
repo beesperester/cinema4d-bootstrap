@@ -2,7 +2,7 @@
 This module provides methods for rendering headers
 """
 
-from bootstrap.classes.template import Template
+from bootstrap4c4d.classes.template import Template
 
 header_container = Template(
     """#ifndef _Oatom_H_

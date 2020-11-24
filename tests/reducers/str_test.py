@@ -3,8 +3,8 @@
 import hashlib
 import unittest
 
-from bootstrap.classes.description import Description
-from bootstrap.reducers.str import reduce_strings
+from bootstrap4c4d.classes.description import Description
+from bootstrap4c4d.reducers.str import reduce_strings
 
 
 class TestStringsReducer(unittest.TestCase):

@@ -3,8 +3,8 @@
 import hashlib
 import unittest
 
-from bootstrap.classes.description import Description
-from bootstrap.reducers.res import reduce_resource
+from bootstrap4c4d.classes.description import Description
+from bootstrap4c4d.reducers.res import reduce_resource
 
 
 class TestResourceReducer(unittest.TestCase):

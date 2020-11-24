@@ -3,9 +3,9 @@
 import hashlib
 import unittest
 
-from bootstrap.classes.description import Description
-from bootstrap.reducers.h import reduce_header
-from bootstrap.render.h import render_header
+from bootstrap4c4d.classes.description import Description
+from bootstrap4c4d.reducers.h import reduce_header
+from bootstrap4c4d.render.h import render_header
 
 
 class TestHeaderRender(unittest.TestCase):

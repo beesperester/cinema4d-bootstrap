@@ -3,7 +3,7 @@
 import hashlib
 import unittest
 
-from bootstrap.classes.description import \
+from bootstrap4c4d.classes.description import \
     Description, \
     Container, \
     Assignment, \
