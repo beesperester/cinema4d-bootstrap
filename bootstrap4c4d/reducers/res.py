@@ -2,10 +2,10 @@
 This module provides methods for reducing Description to resource
 """
 
-import bootstrap
+import bootstrap4c4d
 
 
-def reduce_resource(description: bootstrap.Description) -> dict:
+def reduce_resource(description: bootstrap4c4d.Description) -> dict:
     """
     This method reduces Description instance to nested resource dictionary
     """

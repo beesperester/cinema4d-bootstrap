@@ -2,7 +2,7 @@
 This module provides methods for rendering resources
 """
 
-from bootstrap.classes.template import Template
+from bootstrap4c4d.classes.template import Template
 
 resource_container = Template(
     """{key} {id}

@@ -2,7 +2,7 @@
 This module provides methods for rendering locales
 """
 
-from bootstrap.classes.template import Template
+from bootstrap4c4d.classes.template import Template
 
 locales_container = Template(
     """STRINGTABLE {id}

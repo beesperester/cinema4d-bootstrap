@@ -2,7 +2,7 @@ import c4d
 import os
 
 #----begin_resource_section----
-from bootstrap import Description, Assignment, Container, Group
+from bootstrap4c4d import Description, Assignment, Container, Group
 
 strength = Description({
     "id": "STRENGTH",

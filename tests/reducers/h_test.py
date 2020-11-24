@@ -3,8 +3,8 @@
 import hashlib
 import unittest
 
-from bootstrap.classes.description import Description
-from bootstrap.reducers.h import reduce_header
+from bootstrap4c4d.classes.description import Description
+from bootstrap4c4d.reducers.h import reduce_header
 
 
 class TestHeaderReducer(unittest.TestCase):

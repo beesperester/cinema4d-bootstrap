@@ -3,9 +3,9 @@
 import hashlib
 import unittest
 
-from bootstrap.classes.description import Description, Assignment
-from bootstrap.reducers.res import reduce_resource
-from bootstrap.render.res import render_resource
+from bootstrap4c4d.classes.description import Description, Assignment
+from bootstrap4c4d.reducers.res import reduce_resource
+from bootstrap4c4d.render.res import render_resource
 
 
 class TestResourceRender(unittest.TestCase):

@@ -3,16 +3,16 @@ This module provides methods for compiling the plugin via cli.
 """
 
 import argparse
-import bootstrap
+import bootstrap4c4d
 import colorama
 import os
 
-from bootstrap.io import Config, build_plugin
-from bootstrap.utilities.path import assert_directories
-from bootstrap.utilities.cli import \
+from bootstrap4c4d.io import Config, build_plugin
+from bootstrap4c4d.utilities.path import assert_directories
+from bootstrap4c4d.utilities.cli import \
     cli_format_error, \
     cli_format_success
-from bootstrap.classes.fp import Left, Right
+from bootstrap4c4d.classes.fp import Left, Right
 
 
 def cli_module_build(args: argparse.Namespace) -> None:

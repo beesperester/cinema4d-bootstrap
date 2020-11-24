@@ -2,11 +2,11 @@
 This module provides methods for reducing Description to locales
 """
 
-import bootstrap
+import bootstrap4c4d
 
 
 def reduce_strings(
-    description: bootstrap.Description,
+    description: bootstrap4c4d.Description,
     locale: str = None
 ) -> dict:
     """

@@ -2,7 +2,7 @@
 
 import unittest
 
-from bootstrap import Template
+from bootstrap4c4d import Template
 
 
 class TestTemplateMethods(unittest.TestCase):
