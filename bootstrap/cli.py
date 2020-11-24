@@ -88,15 +88,21 @@ def main() -> None:
     )
 
     create.add_argument(
-        "plugin",
+        "name",
         type=str,
-        help="path where plugin should be created"
+        help="name of your plugin"
     )
 
     create.add_argument(
         "type",
         type=str,
         help="type of plugin that should be created"
+    )
+
+    create.add_argument(
+        "destination",
+        type=str,
+        help="path to the destination directory"
     )
 
     args = parser.parse_args()
