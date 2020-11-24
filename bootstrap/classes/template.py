@@ -58,6 +58,8 @@ class Template(object):
             for group in groups:
                 if group not in data.keys() or data[group] is None:
                     line = line.replace("{{{}}}".format(group), "")
+                    # greedy replace whitespace
+                    line = re.sub(r"\s+", " ", line)
 
                     line = line.strip()
 
