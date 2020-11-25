@@ -1,4 +1,4 @@
-![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) ![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main) ![Upload Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Upload%20Python%20Package/badge.svg)
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) ![Python Package](https://github.com/beesperester/cinema4d-bootstrap4c4d/workflows/Python%20Package/badge.svg?branch=main) ![Upload Python Package](https://github.com/beesperester/cinema4d-bootstrap4c4d/workflows/Upload%20Python%20Package/badge.svg)
 
 # bootstrap4c4d
 
@@ -16,13 +16,13 @@ Simplify your Cinema 4D plugin development process by generating all the necessa
 
 ## Description
 
-With **bootstrap** you can automate a lot of the back and fore generally associated with writing Cinema 4D plugins. No need to write all those pesky header, string and resource files by hand. Just define them in your plugin.py file and automagically build your plugin.h, plugin.res, plugin.str and plugin.pyp file.
+With **bootstrap4c4d** you can automate a lot of the back and fore generally associated with writing Cinema 4D plugins. No need to write all those pesky header, string and resource files by hand. Just define them in your plugin.py file and automagically build your plugin.h, plugin.res, plugin.str and plugin.pyp file.
 
 In the following excerpt you can see a very basic setup for a **REAL** value called **STRENGTH** which willbe displayed as **PERCENT**. This is wrappend in a **GROUP** with the name **SETTINGS** which is itself wrapped in a **CONTAINER** that represents the plugin:
 
 ```python
 #----begin_resource_section----
-from bootstrap import Container, Assignment, Group, Description
+from bootstrap4c4d import Container, Assignment, Group, Description
 
 strength = Description({
     "id": "STRENGTH",
@@ -127,7 +127,7 @@ For further information about **c4dpy** please refer to the official [documentat
 
 Next you need to download [pip](https://pip.pypa.io/en/stable/installing/)
 ```
-$ curl https://bootstrap.pypa.io/get-pip.py -o /path/to/some/directory/get-pip.py
+$ curl https://bootstrap4c4d.pypa.io/get-pip.py -o /path/to/some/directory/get-pip.py
 ```
 
 For installing pip you need to make sure to use the path to **c4dpy** instead of your system's python  installation
@@ -146,7 +146,7 @@ $ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m pip inst
 Display available cli arguments:
 
 ```
-$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap -h
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap4c4d -h
 ```
 
 ### Build
@@ -154,7 +154,7 @@ $ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstra
 Build an existing python plugin which has already been set up with **bootstrap4c4d**:
 
 ```
-$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap build /path/to/your/plugin.py
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap4c4d build /path/to/your/plugin.py
 ```
 
 ### Create
@@ -164,7 +164,7 @@ $ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstra
 Create a new plugin with **bootstrap4c4d**:
 
 ```
-$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap create YOUR_PLUGIN_NAME tag /path/to/your/plugin_directory
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap4c4d create YOUR_PLUGIN_NAME tag /path/to/your/plugin_directory
 ```
 
 ## Examples
@@ -192,7 +192,7 @@ This will be where you define your plugin IDs, the static IDs will be injected a
 Using **bootstrap4c4d** like so will build the plugin:
 
 ```
-$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap build tmyplugin.py
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap4c4d build tmyplugin.py
 ```
 
 This will result in the following files beeing created:
