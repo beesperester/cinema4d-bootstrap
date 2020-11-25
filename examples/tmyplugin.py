@@ -115,6 +115,7 @@ class MyPlugin(c4d.plugins.TagData):
 
         return c4d.EXECUTIONRESULT_OK 
 
+
 if __name__ == "__main__":
     # Retrieves the icon path
     directory, _ = os.path.split(__file__)
@@ -129,7 +130,8 @@ if __name__ == "__main__":
     if bmp.InitWith(fn)[0] != c4d.IMAGERESULT_OK:
         raise MemoryError("Failed to initialize the BaseBitmap.")
 
-    c4d.plugins.RegisterTagPlugin(id=PLUGIN_ID,
+    c4d.plugins.RegisterTagPlugin(
+        id=PLUGIN_ID,
         str="My Plugin",
         info=c4d.TAG_EXPRESSION | c4d.TAG_VISIBLE | c4d.TAG_IMPLEMENTS_DRAW_FUNCTION,
         g=MyPlugin,
