@@ -1,4 +1,4 @@
-![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) ![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main) ![Upload Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Upload%20Python%20Package/badge.svg?event=release)
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg) ![Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Python%20Package/badge.svg?branch=main) ![Upload Python Package](https://github.com/beesperester/cinema4d-bootstrap/workflows/Upload%20Python%20Package/badge.svg)
 
 # bootstrap4c4d
 
