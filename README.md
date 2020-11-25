@@ -118,29 +118,27 @@ STRENGTH = 34087515
 
 ## Installation
 
-1. First you need to get the path to **c4dpy**. On macOS this will be something like this:
+First you need to get the path to **c4dpy**. On macOS this will be something like this:
 ```
 /Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy
 ```
 
 For further information about **c4dpy** please refer to the official [documentation](https://developers.maxon.net/docs/Cinema4DPythonSDK/html/manuals/introduction/python_c4dpy.html).
 
-2. Next you need to download [pip](https://pip.pypa.io/en/stable/installing/)
+Next you need to download [pip](https://pip.pypa.io/en/stable/installing/)
 ```
 $ curl https://bootstrap.pypa.io/get-pip.py -o /path/to/some/directory/get-pip.py
 ```
 
-3. For installing pip you need to make sure to use the path to **c4dpy** instead of your system's python  installation
+For installing pip you need to make sure to use the path to **c4dpy** instead of your system's python  installation
 ```
 $ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" /path/to/some/directory/get-pip.py
 ```
 
-4. Now you are ready to install **bootstrap4c4d** via pip
-
-> This is not yet possible, plugin needs to be published to pypi
+Now you are ready to install **bootstrap4c4d** via pip
 
 ```
-$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m pip install beesperester/bootstrap
+$ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m pip install bootstrap4c4d-beesperester
 ```
 
 ## Usage
@@ -216,4 +214,4 @@ Plugins build with **bootstrap4c4d**:
 
 - [ ] Rewrite build process in a functional way
 - [ ] Add create functionality to cli / io
-- [ ] Publish package to pypi
+- [x] Publish package to pypi
