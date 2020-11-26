@@ -7,7 +7,10 @@ import bootstrap4c4d
 import colorama
 import os
 
-from bootstrap4c4d.io import Config, CreatePluginConfig, build_plugin, create_plugin
+from bootstrap4c4d.io import Config, \
+    CreatePluginConfig, \
+    build_plugin, \
+    create_plugin
 from bootstrap4c4d.utilities.path import assert_directories
 from bootstrap4c4d.utilities.cli import \
     cli_format_error, \
