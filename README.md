@@ -159,9 +159,7 @@ $ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstra
 
 ### Create
 
-> This is not yet implemented
-
-Create a new plugin with **bootstrap4c4d**:
+Create a new tag / object plugin with **bootstrap4c4d**:
 
 ```
 $ "/Applications/Maxon Cinema 4D R23/c4dpy.app/Contents/MacOS/c4dpy" -m bootstrap4c4d create YOUR_PLUGIN_NAME tag /path/to/your/plugin_directory
@@ -213,5 +211,5 @@ Plugins build with **bootstrap4c4d**:
 ## To do
 
 - [ ] Rewrite build process in a functional way
-- [ ] Add create functionality to cli / io
+- [x] Add create functionality to cli / io
 - [x] Publish package to pypi

@@ -3,6 +3,8 @@ This module provides methods for compiling the plugin
 """
 
 
+import base64
+import gzip
 import os
 import importlib
 
@@ -40,6 +42,107 @@ Prefix to prepend to compiled files
 """
 
 
+OPLUGIN = (
+    "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"
+)
+"""
+Base64 encoded and compressed object plugin template
+"""
+
+TPLUGIN = (
+    "H4sIAAmAv18C/5VWW4/iNhR+z684zTw0SDTabqetOhIPDAQUlZu4dLfariKTGPBu"
+    "Eqe2syydzn/vsR2SQOl0FyFB4u9837n52CwruFAQ3ycOs3+5dJy77/CzpXuWR4JK"
+    "XoqYRpLGivFcrzg7wTPYcq6kEqS4R2uorIdUxoIVGtmFvpRsn2c0V10Y8FwRllPR"
+    "hbHgZeE4e/2DtEqxfC+hZ9977ng53yyiVbBeh7Pxyu3C05MD+HE/kbSk7gO8M4/6"
+    "01LzKtT5436kJ8S6w2DU30zWbvdy9cz1ff36+blj/r+3SDflMUmpREyL2cWAtbdR"
+    "qRfcVeW861gGR5M4AhOD4dQRe+5T0jiak4w+vxhVkzbPnfWnAYJvMHS6Nw3C2WCy"
+    "GRqb9ZZI+iU4+rnAMkukbqMv6/PVuZmegByxeTIKRVpiK10kyXQYzZPb/dVuQJZc"
+    "LN1BOJRwZGkKWwqkVDwjiqE76QlY/gGRNHEuWwhrcRmLP6YqTLyWF1ciqPJIQZaC"
+    "guJQShSCMmd/lhTVgW9NXRMw2+B4PPo2wJjsqB/zzFlMNuNwFiG0B69f/3D/408/"
+    "//LKcZw4JVLCk/kxRfRw51TG0l+T/ZAo0nlwTKISuoMwZ8qTNN11IecJxaU62a5b"
+    "/x9g8OjN8UBzGKBjGYH7obFlJGV/YQwHChV7beRhVImODnXQpqt/SZkqMP0oOzXw"
+    "oSCCZEb/AdbIhL4qkscU+K7N7DcW6lTQykAHOKYTJtUMnxuIoKoUORIKzCnPMddx"
+    "jC3YBY6U4sgw5SOSSurfjDhBPcytltC11PJh5RVWtYZZEaPR5DT4TONS0Sqtiuwx"
+    "dB6jcNGFLQ6qQjAumDp1YZeSvXw559tTK+NEASXxAVYxzWmlY+agOjAJ+NXZKlIS"
+    "N3nAmmGPYffGZUo0GOSBlykWhnyssP51JdDlryqEwes6POI4QMw1H0Zv+Q5cKv1U"
+    "6glxJkXrbyW2vN5Z18zGUjOfjaTRGFZP10K8aOlYxpbKNblGn72eG/A131ZZvvVB"
+    "UIIpO+gC2OpaUp32/0iKttXsytjiULDZMU/XOueOeMA9teMis4UiW14qo0PPla6R"
+    "12oNQ/A2GGzW4Xy2WIbzZbj+/VrMNN0tJbO92yHpjqrCTa4FK5ZabTTpj1f/2n0v"
+    "7S1dkf/fWjqFtcgyWOFJG81/xVHHdhBFesZFEfR64EZRhjMzilwregdLiqcF/UTt"
+    "rmCxzh5RB7tNmcByc4F7EK3xRuLrJV8WKY7DKNqxFGnthNrlLcAHznKvZezi4WIO"
+    "z/MhY4auX+R7twrlDgZYcYVeENAN8MhURgqztM0KpNYBbs1L29sW4FlxDFKjsA4z"
+    "ntMmnYLo+TWlGXoRCMHxBjAiLLXzNjaCF3p+446e2iYjzSoedupQZ6kl7GvwG1z0"
+    "dnnn3av38I31N5z2x0FdjC90i10eFzedG+muAmxM3YKwMOeWrYJZsOrr/jgK3i5Q"
+    "f4U9AX/DH7UD5+XfwlX4OAluroXTxSSYBrP1Khou+2+i0WY20M3l1H2zx8OECuNl"
+    "y4X2SXrGoJcW4dUyLOnVp3Nz1cGbS89tncut2yLDjdgz8bVuRr0WtnnduqL1bl35"
+    "Gk6sYw8LaF50nH8AcozS3oQLAAA="
+)
+"""
+Base64 encoded and compressed tag plugin template
+"""
+
+ICON = (
+    "H4sIANhov18C/+sM8HPn5ZLiYmBg4PX0cAkC0g4gzMEEJFW5n3UyMLBszwyJKInw"
+    "9bFKzs/VS0zJT0rVq8gtYAABG/uKgsTk7NQShaTU9Mw8W6X3u/crKWSm2CqFm/oa"
+    "+BY4p2ZkelQVpQZX+YUkV2UnW6Yo2dtx2VRYAQ3ITS1JVKjIzckrtqqwVQKbawVk"
+    "g4T1lRTASkqybZUifAMUnPOLUhVM9Uz1DJTsuBRsilLSrIJc3KCagTxbpYySkgIr"
+    "ff3y8nK9cmO9/KJ0fUNLS0t9AyN9IyNdoArd4sq8ksQK3bxiZZAREDNcUouTizIL"
+    "SjLz8xRA/MSk/NISWyUloLwC1PDUikyE6XnFUO8DA0IfJKNvqGegj6y8JDMNh3KQ"
+    "DIbygoz8kvzijPwC7Hrg0hgagWGDXUtFIlbFvr74lefmougoLnEtK8GvoziksiBV"
+    "Pyi1OL+0KDnVtSw1r0QZbAQoXKwCMitScyJcMnNT84qBoWurZGaCJhmJQ9I5Pye/"
+    "KBiYqFJtlQzBwqCQs/LMTUxPDc9MKcmAK0eI+6TmpaNLgFyWUwqK2tC8TKBfjBBS"
+    "EQg5WyVzI2CigktFYpWCxwPEdb75KUDHGaNJeTo7BxTlp2XmAOWKg9ydFDxdnc0M"
+    "Lc3MdI30IB4BxoMVUG9mWqVLYglQlZGBkYGuoaGuoUWIoaGVgYWVsYG2AZBhgFAN"
+    "zAspiSWJhNSDUrSCDTierTwyi0vyiyrBQpBkHpxaCOFBuDmZEI4COJatEpMhvi0o"
+    "yk8pTU5NUUKRLc5PKylPLEp1TAdGsK2SY1paJjA4KxUCQP5W0PAqzVEwNlAAuUwT"
+    "VWN5RmoePifrQx2oj+xCG30MP0AUIOVUUAGgDy0BgEWJPrwsAXLgpVFqHrAIKgKW"
+    "NZVu/8wZGBibM4GxgxErDAwaE0sn3tduDpQ4bi89a1tnwcNDRy/tkPoZ2C2dKpSV"
+    "eXbKw7Tq7eXB1c/f1qqfXFu0e9GR3njxP6x3tK57CWruLHo4a4fj+udbr6pU+52v"
+    "tHtefe5zybniA5KnNWdF3uaO2pfgctx5380fc85/bWlPu7NjhbfGMjuhzpaVWe+3"
+    "W7ypuJt7fVXdu/jPSy4tY+qrepjoas51SPjQw6lNeZ+nFaye5Lukxb+FuS0m4Mex"
+    "a5NV67ZZBj/yn90bUSIyx/fQvjP6fv+SVLMzDn0q+hOVF6l5/3hdp/nc+TOn3VC8"
+    "1+c5pdDpx4yUnsCmL4YqxRPyfr2cKBr6qbr+0/KISTGuaXNDecROTljq4HAldeW8"
+    "aSu65k2bmHz13f/7+2a9cqhfucucpbR/2tdbnOt8f2hFXTvemFor63SWec5z7Z/e"
+    "vw1+qFVtXPTz+4JCWT99ragi6XNmC97G+Ut0yq90u7Ny1YciHt7CjJ1M32tWpj+t"
+    "7XunsE0tvpTTevcF1efS4vsYH99LX8Xj+PgisNrgLPCILGZg4BYGYUaGWXMkgIIJ"
+    "ni6OIRmNb8878jIoCBwwOLD/uTNLf1tK6Ia3kZvrykoOrGbbQgnkTpJgqkuIeycG"
+    "qrg8Xf1c1jklNAEA2EPKlgAHAAA="
+)
+"""
+Base64 encoded and compressed icon placeholder
+"""
+
+
 class Config(object):
     """
     This class represents a container of variables
@@ -53,6 +156,48 @@ class Config(object):
         self.root_name = root_name
         self.root = root
         self.module = module
+
+
+class CreatePluginConfig(Config):
+    """
+    This class represents a container of variables
+    that are used to create a new plugin
+    """
+
+    def __init__(self, name, destination, template):
+        self.name = name
+        self.destination = destination
+        self.template = template
+
+    @property
+    def resourcename(self):
+        if self.template == "tag":
+            return "t{}".format(self.name)
+
+        return "o{}".format(self.name)
+
+    @property
+    def classname(self):
+        return self.name.title()
+
+    @property
+    def descriptionname(self):
+        return self.resourcename.title()
+
+    @property
+    def format_data(self):
+        return {
+            "resourcename": self.resourcename,
+            "descriptionname": self.descriptionname,
+            "classname": self.classname
+        }
+
+    @property
+    def path(self):
+        return os.path.join(
+            self.destination,
+            "{}.py".format(self.resourcename)
+        )
 
 
 def write_resource(config: Config) -> Config:
@@ -124,6 +269,79 @@ def write_locales(config: Config) -> Config:
             f.write(contents)
 
         destination_files.append(destination_file)
+
+    return config
+
+
+def write_icon(config: Config) -> Config:
+    """
+    This method creates a temporary plugin icon
+    """
+    icon_file = os.path.join(
+        config.destination,
+        "res",
+        "{}.png".format(config.resourcename)
+    )
+
+    assert_directories(icon_file, True)
+
+    if not os.path.isfile(icon_file):
+        with open(icon_file, "wb") as f:
+            f.write(gzip.decompress(base64.b64decode(ICON)))
+
+    return config
+
+
+def write_template(config: Config) -> Config:
+    """
+    This method creates a plugin framework
+    """
+    data = TPLUGIN
+
+    if config.template == "object":
+        data = OPLUGIN
+
+    with open(config.path, "w") as f:
+        content_decoded = base64.b64decode(data)
+        content_decompressed = gzip.decompress(content_decoded)
+
+        content = content_decompressed.decode("ascii")
+        f.write(content.format(**config.format_data))
+
+    return config
+
+
+def create_plugin_files(config: Config) -> Config:
+    """
+    This method creates necessary plugin files
+    """
+    c4d_symbols_file = os.path.join(
+        config.destination,
+        "res",
+        "c4d_symbols.h"
+    )
+    c4d_symbols_content = """enum
+{
+
+};"""
+
+    if not os.path.isfile(c4d_symbols_file):
+        assert_directories(c4d_symbols_file, True)
+
+        with open(c4d_symbols_file, "w") as f:
+            f.write(c4d_symbols_content)
+
+    c4d_strings_file = os.path.join(
+        config.destination,
+        "res/strings_us",
+        "c4d_strings.str"
+    )
+
+    if not os.path.isfile(c4d_strings_file):
+        assert_directories(c4d_strings_file, True)
+
+        with open(c4d_strings_file, "w") as f:
+            f.write("")
 
     return config
 
@@ -310,3 +528,11 @@ build_plugin = pipe([
 """
 This creates a pipe for creating the plugin
 """
+
+# Right -> Either
+create_plugin = pipe([
+    encase(assert_destination),
+    encase(write_icon),
+    encase(write_template),
+    encase(create_plugin_files)
+])
