@@ -7,7 +7,10 @@ import bootstrap4c4d
 import colorama
 import os
 
-from bootstrap4c4d.io import Config, build_plugin
+from bootstrap4c4d.io import Config, \
+    CreatePluginConfig, \
+    build_plugin, \
+    create_plugin
 from bootstrap4c4d.utilities.path import assert_directories
 from bootstrap4c4d.utilities.cli import \
     cli_format_error, \
@@ -42,6 +45,27 @@ def cli_module_build(args: argparse.Namespace) -> None:
         None)
 
     return build_plugin(Right(config))
+
+
+def cli_module_create(args: argparse.Namespace) -> None:
+    """
+    This method takes all the arguments from cli and tries to create
+    the plugin
+    """
+    name = args.name
+
+    template = "tag"
+
+    if args.template == "object":
+        template = "object"
+
+    config = CreatePluginConfig(
+        name,
+        args.destination,
+        template
+    )
+
+    return create_plugin(Right(config))
 
 
 def main() -> None:
@@ -94,9 +118,9 @@ def main() -> None:
     )
 
     create.add_argument(
-        "type",
+        "template",
         type=str,
-        help="type of plugin that should be created"
+        help="plugin template that should be created (tag|object)"
     )
 
     create.add_argument(
@@ -109,6 +133,17 @@ def main() -> None:
 
     if args.module == "build":
         result = cli_module_build(args)
+
+        if isinstance(result, Left):
+            print(cli_format_error(result.value))
+        else:
+            config = result.value
+
+            message = "build plugin {}".format(config.path)
+
+            print(cli_format_success(message))
+    elif args.module == "create":
+        result = cli_module_create(args)
 
         if isinstance(result, Left):
             print(cli_format_error(result.value))
