@@ -17,6 +17,12 @@ def reduce_resource(description: bootstrap4c4d.Description) -> dict:
     if isinstance(description.value, list):
         data["value"] = [reduce_resource(x) for x in description.value]
     else:
-        data["value"] = description.value
+        omit = (
+            isinstance(description.omit, list) and
+            "res" in description.omit
+        )
+
+        if not omit:
+            data["value"] = description.value
 
     return data

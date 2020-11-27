@@ -13,10 +13,16 @@ def reduce_header(description: bootstrap4c4d.Description) -> dict:
     data = []
 
     try:
-        data.append({
-            "key": description.id,
-            "value": description.GetId()
-        })
+        omit = (
+            isinstance(description.omit, list) and
+            "h" in description.omit
+        )
+
+        if not omit:
+            data.append({
+                "key": description.id,
+                "value": description.GetId()
+            })
     except IdError:
         pass
 

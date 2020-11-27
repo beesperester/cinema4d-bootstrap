@@ -27,7 +27,8 @@ class Description(object):
             "id": None,
             "key": None,
             "value": None,
-            "locales": None
+            "locales": None,
+            "omit": None
         }
 
         self.config = {**default_config, **config}

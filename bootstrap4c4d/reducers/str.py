@@ -25,10 +25,16 @@ def reduce_strings(
 
     if isinstance(description.locales, dict):
         if locale in description.locales.keys():
-            locales.append({
-                "key": description.id,
-                "value": description.locales[locale]
-            })
+            omit = (
+                isinstance(description.omit, list) and
+                "str" in description.omit
+            )
+
+            if not omit:
+                locales.append({
+                    "key": description.id,
+                    "value": description.locales[locale]
+                })
 
     if isinstance(description.value, list):
         for item in description.value:
